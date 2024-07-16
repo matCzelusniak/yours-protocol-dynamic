@@ -1,0 +1,42 @@
+operation place(plot_id: integer, x: integer, y: integer, token_id: byte_array) {
+  val account = auth.authenticate();
+
+  val token = yours.token @ { .asset.id == token_id };
+  val locked_account = yours.ensure_locked_account(account.id);
+  val spec = yours.transfer_specification(
+    from = account,
+    to = locked_account,
+    amount = 1
+  );
+  yours.transfer_tokens(token, spec);
+
+  val placeable = placeable @ { .token.asset.id == token_id };
+  delete placed_position @? { plot_id, x, y };
+  create placed_position(plot_id, x, y, placeable);
+}
+
+operation unplace(plot_id: integer, x: integer, y: integer) {
+  val account = auth.authenticate();
+
+  val placed_position = placed_position @ { 
+    plot_id, 
+    x, 
+    y 
+  };
+
+  val locked_account = yours.ensure_locked_account(account.id);
+  val spec = yours.transfer_specification(
+    from = locked_account,
+    to = account,
+    amount = 1
+  );
+  yours.transfer_tokens(placed_position.placeable.token, spec);
+
+  delete placed_position;
+}
+
+@extend(auth.auth_handler)
+function place_auth() = auth.add_auth_handler(
+  scope = rell.meta(place).mount_name,
+  flags = ["T"]
+);

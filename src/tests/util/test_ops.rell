@@ -1,0 +1,20 @@
+object PLACEABLE_A {
+  name = "Placeable A";
+  symbol: text = "PA";
+  image: text = "https://assets.anichess.com/orb/1.jpg";
+  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
+}
+
+object PLACEABLE_B {
+  name = "Placeable B";
+  symbol: text = "PAB";
+  image: text = "https://assets.anichess.com/orb/1.jpg";
+  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
+}
+
+object EQUIPPABLE_A {
+  name = "Equippable A";
+  symbol: text = "EA";
+  image: text = "https://assets.anichess.com/orb/1.jpg";
+  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
+}

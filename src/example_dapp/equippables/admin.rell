@@ -1,0 +1,26 @@
+operation register_equippable(name, symbol: name, slots: list<name>, image: text, animation_url: text) {
+  val spec = yours.token_specification(
+    name,
+    symbol,
+    decimals = 0,
+    icon_url = image,
+    modules = [rell.meta(register_equippable).module_name]
+  );
+
+  val token = yours.define_token(spec);
+  yours.attach_animation(token, animation_url);
+
+  val equippable = create equippable(token);
+  for (slot in slots) {
+    create occupying_slot(equippable, slot);
+  }
+}
+
+operation give_equippable(token_id: byte_array, amount: integer, account_id: byte_array) {
+  val token = yours.token @ { .asset.id == token_id };
+  yours.mint_tokens(
+    token, 
+    yours.balance_specification(
+      accounts.account @ { .id == account_id }, 
+      amount));
+}

@@ -1,0 +1,7 @@
+module;
+
+import lib.yours;
+import lib.ft4.assets;
+
+import example_dapp.placeables;
+import example_dapp.equippables;

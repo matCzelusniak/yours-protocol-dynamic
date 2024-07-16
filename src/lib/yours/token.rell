@@ -1,0 +1,155 @@
+/**
+ * The specification for a token.
+ * 
+ * @param name The name of the token.
+ * @param symbol The symbol of the token.
+ * @param decimals The number of decimals of the token.
+ * @param icon_url The URL of the icon of the token.
+ * @param modules The modules of the token.
+ */
+struct token_specification {
+  name: name;
+  symbol: name;
+  decimals: integer;
+  icon_url: text;
+  modules: list<name>;
+}
+
+/**
+ * The specification for a balance mutation.
+ * 
+ * @param account The account to mint or burn the token from.
+ * @param amount The amount of the token to mint or burn.
+ */
+struct balance_specification {
+  account: ft4.accounts.account;
+  amount: big_integer;
+}
+
+/**
+ * The specification for a transfer.
+ * 
+ * @param from The account to transfer the token from.
+ * @param to The account to transfer the token to.
+ * @param amount The amount of the token to transfer.
+ */
+struct transfer_specification {
+  from: ft4.accounts.account;
+  to: ft4.accounts.account;
+  amount: big_integer;
+}
+
+/**
+ * Define a new token on the blockchain.
+ *
+ * @param spec the specification for the token
+ */
+function define_token(spec: token_specification) {
+  val asset = ft4.assets.Unsafe.register_asset(
+    spec.name, 
+    spec.symbol,
+    spec.decimals,
+    chain_context.blockchain_rid,
+    spec.icon_url);
+
+  val token = create token(asset);
+  for (m in spec.modules) {
+    attach_module(token, m);
+  }
+
+  return token;
+}
+
+/**
+ * Attach an animation to a token.
+ *
+ * @param token to attach the animation to
+ * @param animation_url to attach
+ */
+function attach_animation(token, animation_url: text?): token_animation? {
+  delete token_animation @? { token };
+
+  if (animation_url != null) {
+    return create token_animation(token, animation_url);
+  }
+
+  return null;
+}
+
+
+/**
+ * Attach a description to a token.
+ *
+ * @param token to attach the description to
+ * @param description to attach
+ */
+function attach_description(token, description: text?): token_description? {
+  delete token_description @? { token };
+
+  if (description != null) {
+    return create token_description(token, description);
+  }
+
+  return null;
+}
+
+/**
+ * Attach a module to a token. Making it eligible to be part of the token's metadata.
+ *
+ * @param token to attach the module to
+ * @param module_name to attach
+ */
+function attach_module(token, module_name: name) {
+  val modules = module_name.split(".");
+  create token_module(token, modules[modules.size() - 1]);
+}
+
+/**
+ * Update the image for a token.
+ *
+ * @param token to update the image for
+ * @param image_url to update
+ */
+function update_image(token, image_url: text) {
+  token.asset.icon_url = image_url;
+}
+
+/**
+ * Mint tokens to a specific account.
+ *
+ * @param token to mint
+ * @param spec the specification for the mint
+ */
+function mint_tokens(token, spec: balance_specification) {
+  return ft4.assets.increase_balance(spec.account, token.asset, spec.amount);
+}
+
+/**
+ * Burn tokens from a specific account.
+ *
+ * @param token to burn
+ * @param spec the specification for the burn
+ */
+function burn_tokens(token, spec: balance_specification) {
+  return ft4.assets.deduct_balance(spec.account, token.asset, spec.amount);
+}
+
+/**
+ * Transfer tokens from one account to another.
+ *
+ * @param token to transfer
+ * @param spec the specification for the transfer
+ */
+function transfer_tokens(token, spec: transfer_specification) {
+  ft4.assets.Unsafe.transfer(spec.from, spec.to, token.asset, spec.amount);
+}
+
+/**
+ * Get the balance of a token for a specific account.
+ *
+ * @param token to get the balance of
+ * @param account to get the balance of
+ */
+function get_token_balance(token, ft4.accounts.account) {
+  return ft4.assets.get_asset_balance(account, token.asset);
+}

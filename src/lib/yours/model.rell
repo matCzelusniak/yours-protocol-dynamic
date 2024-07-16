@@ -1,0 +1,61 @@
+/**
+ * The underlying token which can be either fungible or non-fungible.
+ * Dapps are expected to create their own entities which references this token.
+ * 
+ * @param asset The FT4 asset that this token wraps.
+ */
+entity token {
+  key ft4.assets.asset;
+}
+
+/**
+ * The animation for a token. Compatible with ERC721 OpenSea standard.
+ * 
+ * @param token The token.
+ * @param url The URL of the animation. This is mutable since the animation can change.
+ */
+entity token_animation {
+  key token;
+  mutable url: text;
+}
+
+/**
+ * The description for a token. Compatible with ERC721 OpenSea standard.
+ * 
+ * @param token The token.
+ * @param text The description. This is mutable since the description can change.
+ */
+entity token_description {
+  key token;
+  mutable text;
+}
+
+/**
+ * Modules where tokens are allowed to operate within.
+ * This is primarily used in order to prevent extendable functions with 
+ * the wrong context from being executed.
+ * 
+ * @param token The token.
+ * @param module_name The name of the module where the token has utility inside.
+ */
+entity token_module {
+  key token, module_name: name;
+}
+
+/**
+ * Metadata that has arrived from a different blockchain.
+ * Not every dapp will support the same modules (& utility) for a token.
+ * 
+ * While a chain `B`might only support the token to be used in module `X`.
+ * In the above scenario `chain B` still need to persist metadata for module `B`,
+ * since chain `B` has no idea about module `Y`. But if the tokens gets transferred 
+ * to a chain `C` then we must not lose the metadata of module `Y`.
+ * 
+ * @param token The token that this attribute belongs to.
+ * @param trait_type The type of the attribute. This will be used on the FT4 layer.
+ * @param value The value of the attribute.
+ */
+entity imported_attribute {
+  key token, trait_type: name;
+  value: json;
+}

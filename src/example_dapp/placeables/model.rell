@@ -1,0 +1,10 @@
+entity placeable {
+  key yours.token;
+  width: integer;
+  height: integer;
+}
+
+entity placed_position {
+  key plot_id: integer, x: integer, y: integer;
+  placeable;
+}

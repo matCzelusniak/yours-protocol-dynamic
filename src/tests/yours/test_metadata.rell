@@ -1,0 +1,39 @@
+function test_metadata() {
+  // Register FT4 Account to mint tokens to
+  val alice = create_test_account(rell.test.keypairs.alice);
+
+  // Admin registratrion of Placeables and Equippables
+  rell.test
+    .tx()
+    .op(placeables.register_placeable(util.PLACEABLE_A.name, util.PLACEABLE_A.symbol, util.PLACEABLE_A.image, util.PLACEABLE_A.animation_url, 10, 10))
+    .op(placeables.register_placeable(util.PLACEABLE_B.name, util.PLACEABLE_B.symbol, util.PLACEABLE_B.image, util.PLACEABLE_B.animation_url, 10, 10))
+    .op(equippables.register_equippable(util.EQUIPPABLE_A.name, util.EQUIPPABLE_A.symbol, ["hat"], util.EQUIPPABLE_A.image, util.EQUIPPABLE_A.animation_url))
+    .run();
+
+  val asset_placeable_token_id = assets.asset @ { .name == util.PLACEABLE_A.name } ( .id );
+  val asset_placeable_b_token_id = assets.asset @ { .name == util.PLACEABLE_B.name } ( .id );
+  val asset_equippable_token_id = assets.asset @ { .name == util.EQUIPPABLE_A.name } ( .id );
+
+  // Give Placeables and Equippables to FT4 Account
+  rell.test
+    .tx()
+    .op(placeables.give_placeable(asset_placeable_token_id, 1, alice.account.id))
+    .op(placeables.give_placeable(asset_placeable_b_token_id, 10, alice.account.id))
+    .op(equippables.give_equippable(asset_equippable_token_id, 1, alice.account.id))
+    .run();
+
+  // Attach metadata to token by utilizing them
+  rell.test
+    .tx()
+    .op(auth_op(rell.test.keypairs.alice))
+    .op(placeables.place(30713531, 0, 0, asset_placeable_token_id))
+    .op(auth_op(rell.test.keypairs.alice))
+    .op(placeables.place(30713531, 0, 9, asset_placeable_b_token_id))
+    .sign(rell.test.keypairs.alice)
+    .run();
+
+  val placeble_a_metadata = yours.metadata(asset_placeable_token_id);
+  val equippable_a_metadata = yours.metadata(asset_equippable_token_id);
+  log(placeble_a_metadata?.to_gtv_pretty()?.to_json());
+  log(equippable_a_metadata?.to_gtv_pretty()?.to_json());
+}

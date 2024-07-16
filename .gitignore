@@ -1,0 +1,9 @@
+build
+logs
+src/lib/*
+.chromia
+!src/lib/yours
+
+.DS_STORE
+
+node_modules

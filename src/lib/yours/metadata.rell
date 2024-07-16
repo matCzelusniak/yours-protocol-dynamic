@@ -1,0 +1,43 @@
+/**
+ * A single token's metadata. An extension of the ERC721 OpenSea standard.
+ */
+struct token_metadata {
+  name;
+  attributes: set<token_attribute>;
+  modules: list<name>;
+  description: text?;
+  image: text?;
+  animation_url: text?;
+}
+
+/**
+ * A single attribute of a token. Compatible with ERC721 OpenSea standard.
+ */
+struct token_attribute {
+  trait_type: text;
+  value: gtv;
+}
+
+/**
+ * Get the metadata for a specific token. This function will gather metadata from the token's base metadata,
+ * as well as the token's modules on this chain that supports it.
+ *
+ * @param token The token to get the metadata for.
+ */
+function get_metadata(token): token_metadata {
+  val base_metadata = set(imported_attribute @* { token } ( token_attribute(trait_type = .trait_type, value = .value.to_gtv()) ));
+  val metadata = populate_metadata(token, set(token_module @* { token } ( .module_name ))) ?: map<text, gtv>();
+
+  for (trait_type in metadata.keys()) {
+    base_metadata.add(token_attribute(trait_type, value = metadata[trait_type]));
+  }
+
+  return token_metadata(
+    name = token.asset.name,
+    attributes = base_metadata,
+    modules = token_module @* { token } ( .module_name ),
+    description = token_description @? { token } ( .text ),
+    image = token.asset.icon_url,
+    animation_url = token_animation @? { token } ( .url )
+  );
+}

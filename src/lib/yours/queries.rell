@@ -1,0 +1,10 @@
+/**
+ * Returns the metadata of all modules the token has been used within.
+ *
+ * @param token_id of the token to get the metadata for
+ * @returns The metadata of the token.
+ */
+query metadata(token_id: byte_array): token_metadata? {
+  val token = token @? { .asset.id == token_id };
+  return if (token != null) get_metadata(token) else null;
+}

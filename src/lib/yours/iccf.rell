@@ -1,0 +1,120 @@
+/**
+ * This operation initializes the transfer metadata for a token transfer.
+ * It is executed on the source blockchain that you want to transfer the
+ * token away from.
+ *
+ * It is an extension of the FT4 ICCF flow and the purpose is to
+ * pass (the correct) metadata of tokens to the target chain.
+ *
+ * @param metadata The metadata to be initialized for the transfer. Expected to be in `gtv_pretty` format.
+ */
+operation init_transfer_metadata(metadata: gtv) {
+  val init_t_op = op_context.get_all_operations()[op_context.op_index - 1];
+  require(init_t_op.name == rell.meta(ft4.crosschain.init_transfer).mount_name);
+
+  val init_t_args = struct<ft4.crosschain.init_transfer>.from_gtv(init_t_op.args.to_gtv());
+  val token = token @ { .asset.id == init_t_args.asset_id };
+  before_init_transfer(token);
+
+  val existing_metadata = get_metadata(token).to_gtv_pretty();
+  require(existing_metadata == metadata);
+}
+
+/**
+ * This operation applies the transfer metadata to a token transfer.
+ * It is executed against the target blockchain where you want the
+ * token to be imported into.
+ *
+ * It is intended to be passed as an additional operation after `ft4.apply_transfer`.
+ */
+operation apply_transfer_metadata() {
+  val apply_t_op = op_context.get_all_operations()[op_context.op_index - 1];
+  require(apply_t_op.name == rell.meta(ft4.crosschain.apply_transfer).mount_name);
+
+  val apply_t_args = struct<ft4.crosschain.apply_transfer>.from_gtv(apply_t_op.args.to_gtv());
+
+  val nr_of_ops = apply_t_args.init_transfer_tx.body.operations.size();
+  val init_t_metadata_op = apply_t_args.init_transfer_tx.body.operations[nr_of_ops - 1];
+  require(init_t_metadata_op.name == rell.meta(init_transfer_metadata).mount_name);
+
+  val init_t_metadata_args = struct<init_transfer_metadata>.from_gtv(init_t_metadata_op.args.to_gtv());
+
+  val init_t_op = apply_t_args.init_transfer_tx.body.operations[nr_of_ops - 2];
+  require(init_t_op.name == rell.meta(ft4.crosschain.init_transfer).mount_name);
+
+  val init_t_args = struct<ft4.crosschain.init_transfer>.from_gtv(init_t_op.args.to_gtv());
+
+  val asset = ft4.assets.asset @ { .id == init_t_args.asset_id };
+  val token = token @? { asset } ?: create token ( asset );
+
+  delete imported_attribute @? { token };
+
+  val metadata = token_metadata.from_gtv_pretty(init_t_metadata_args.metadata);
+  _apply_common_metadata(token, metadata);
+
+  val attributes = map<name, gtv>();
+  for (attribute in metadata.attributes) {
+    create imported_attribute ( token, trait_type = attribute.trait_type, value = attribute.value.to_json() );
+    attributes.put(attribute.trait_type, attribute.value);
+  }
+
+  after_apply_transfer(token, set(metadata.modules), attributes);
+}
+
+/**
+ * This operation registers a crosschain asset on the target blockchain.
+ * It is executed on the target blockchain where you want the
+ * token to be imported into.
+ *
+ * @param name The name of the asset.
+ * @param symbol The symbol of the asset.
+ * @param decimals The number of decimals of the asset.
+ * @param issuing_blockchain_rid The RID of the blockchain that originally issued this token.
+ * @param icon_url The URL of the icon of the asset.
+ * @param type The type of the asset.
+ * @param origin_blockchain_rid The RID of the origin (source) blockchain.
+ */
+operation register_crosschain_asset(
+  name,
+  symbol: name,
+  decimals: integer,
+  issuing_blockchain_rid: byte_array,
+  icon_url: text,
+  type: text,
+  origin_blockchain_rid: byte_array
+) {
+  val apply_t_op = op_context.get_all_operations()[op_context.op_index + 2];
+  require(apply_t_op.name == rell.meta(ft4.crosschain.apply_transfer).mount_name);
+
+  val apply_t_args = struct<ft4.crosschain.apply_transfer>.from_gtv(apply_t_op.args.to_gtv());
+
+  val nr_of_ops = apply_t_args.init_transfer_tx.body.operations.size();
+  val init_t_op = apply_t_args.init_transfer_tx.body.operations[nr_of_ops - 2];
+  require(init_t_op.name == rell.meta(ft4.crosschain.init_transfer).mount_name);
+
+  val init_t_args = struct<ft4.crosschain.init_transfer>.from_gtv(init_t_op.args.to_gtv());
+
+  if (ft4.assets.asset @? { .id == init_t_args.asset_id } != null) return;
+
+  ft4.crosschain.crosschain.Unsafe.register_crosschain_asset(
+    init_t_args.asset_id,
+    name,
+    symbol,
+    decimals,
+    issuing_blockchain_rid,
+    icon_url,
+    type,
+    init_t_args.asset_id,
+    origin_blockchain_rid
+  );
+}
+
+function _apply_common_metadata(token, metadata: token_metadata) {
+  if (metadata.description != null) {
+    val description = token_description @? { token } ?: attach_description(token, metadata.description!!);
+  }
+
+  if (metadata.animation_url != null) {
+    val animation = token_animation @? { token } ?: attach_animation(token, metadata.animation_url!!);
+  }
+}

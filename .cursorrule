@@ -1,0 +1,82 @@
+Syntax Basics for Rell (files with extension '.rell'):
+
+1. Code blocks are enclosed in curly braces {}.
+2. Comments use // for single-line and /* */ for multi-line.
+3. Variables are declared using 'val' for immutable and 'var' for mutable.
+4. Types are optionally specified after variable names (e.g., val x: integer = 5).
+
+Key Concepts:
+
+1. Operation:
+  - Is included in a blockchain transaction.
+  - Defined using the 'operation' keyword.
+  - Can modify the blockchain state.
+
+Example:
+```rell
+operation transfer(from: byte_array, to: byte_array, amount: integer) {
+  val from_account = account @ { from };
+  val to_account = account @ { to };
+  from_account.balance -= amount;
+  to_account.balance += amount;
+}
+```
+
+2. Query:
+  - Used to retrieve data from the blockchain.
+  - Defined using the 'query' keyword.
+  - Cannot modify the blockchain state.
+
+Example:
+```rell
+query get_balance(account_id: account) = account @ { account_id } ( .balance );
+```
+
+3. Function:
+  - Reusable piece of code.
+  - Defined using the 'function' keyword.
+  - Can be called from operations, queries, or other functions.
+
+Example:
+```rell
+function calculate_fee(amount: decimal): decimal {
+  return amount * 0.01;
+}
+```
+
+4. Entity:
+  - Represents a database table.
+  - Defined using the 'entity' keyword.
+  - Can have attributes and keys.
+  - Can have indexed attributes, as well as composite indexes.
+  - Can have relations to other entities.
+
+Example:
+```rell
+entity user {
+  key name: text;
+  mutable email: text;
+  mutable age: integer;
+}
+
+entity address {
+  key street: text, zip: text, city: text, country: text;
+}
+
+entity residence {
+  key user, address;
+}
+```
+
+5. Struct:
+  - User-defined data type.
+  - Defined using the 'struct' keyword.
+  - Can contain multiple fields of different types.
+
+Example:
+```rell
+struct point {
+  x: integer;
+  y: integer;
+}
+```

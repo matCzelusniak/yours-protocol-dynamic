@@ -1,0 +1,7 @@
+entity equippable {
+  key yours.token;
+}
+
+entity occupying_slot {
+  key equippable, name;
+}
