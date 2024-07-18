@@ -1,7 +1,7 @@
-operation place(plot_id: integer, x: integer, y: integer, token_id: byte_array) {
-  val account = auth.authenticate();
+operation place(plot_id: integer, x: integer, y: integer, collection: name, token_id: integer) {
+  val account = ft4.auth.authenticate();
 
-  val token = yours.token @ { .asset.id == token_id };
+  val token = require(yours.get_token(collection, token_id));
   val locked_account = yours.ensure_locked_account(account.id);
   val spec = yours.transfer_specification(
     from = account,
@@ -10,13 +10,13 @@ operation place(plot_id: integer, x: integer, y: integer, token_id: byte_array) 
   );
   yours.transfer_tokens(token, spec);
 
-  val placeable = placeable @ { .token.asset.id == token_id };
+  val placeable = placeable @ { .token.id == token_id };
   delete placed_position @? { plot_id, x, y };
   create placed_position(plot_id, x, y, placeable);
 }
 
 operation unplace(plot_id: integer, x: integer, y: integer) {
-  val account = auth.authenticate();
+  val account = ft4.auth.authenticate();
 
   val placed_position = placed_position @ { 
     plot_id, 
@@ -35,8 +35,8 @@ operation unplace(plot_id: integer, x: integer, y: integer) {
   delete placed_position;
 }
 
-@extend(auth.auth_handler)
-function place_auth() = auth.add_auth_handler(
+@extend(ft4.auth.auth_handler)
+function place_auth() = ft4.auth.add_auth_handler(
   scope = rell.meta(place).mount_name,
   flags = ["T"]
 );

@@ -3,7 +3,14 @@
  *
  * @param token to apply the transfer to
  */
-@extendable function before_init_transfer(token);
+@extendable function before_init_transfer(token, ft4.accounts.account);
+
+/**
+ * Allows a caller to hook into outgoing tokens and apply custom logic that has to be executed after.
+ *
+ * @param token to apply the transfer to
+ */
+@extendable function after_init_transfer(token, ft4.accounts.account);
 
 /**
  * Allows a caller to hook into incoming tokens and apply custom logic for its own storage needs

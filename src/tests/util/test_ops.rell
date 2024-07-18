@@ -1,4 +1,5 @@
 object PLACEABLE_A {
+  collection: text = "Placeable Collection";
   name = "Placeable A";
   symbol: text = "PA";
   image: text = "https://assets.anichess.com/orb/1.jpg";
@@ -6,6 +7,7 @@ object PLACEABLE_A {
 }
 
 object PLACEABLE_B {
+  collection: text = "Placeable Collection";
   name = "Placeable B";
   symbol: text = "PAB";
   image: text = "https://assets.anichess.com/orb/1.jpg";
@@ -13,6 +15,7 @@ object PLACEABLE_B {
 }
 
 object EQUIPPABLE_A {
+  collection: text = "Equippable Collection";
   name = "Equippable A";
   symbol: text = "EA";
   image: text = "https://assets.anichess.com/orb/1.jpg";

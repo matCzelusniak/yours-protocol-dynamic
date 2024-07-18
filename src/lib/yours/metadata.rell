@@ -4,10 +4,19 @@
 struct token_metadata {
   name;
   attributes: set<token_attribute>;
-  modules: list<name>;
+  yours: yours_metadata;
   description: text?;
   image: text?;
   animation_url: text?;
+}
+
+/**
+ * Yours specific metadata.
+ */
+struct yours_metadata {
+  modules: list<name>;
+  project: name;
+  collection: name;
 }
 
 /**
@@ -33,11 +42,15 @@ function get_metadata(token): token_metadata {
   }
 
   return token_metadata(
-    name = token.asset.name,
+    name = token.name,
     attributes = base_metadata,
-    modules = token_module @* { token } ( .module_name ),
+    yours = yours_metadata(
+      collection = token.collection.name,
+      project = token.collection.project.name,
+      modules = token_module @* { token } ( .module_name ),
+    ),
     description = token_description @? { token } ( .text ),
-    image = token.asset.icon_url,
+    image = token_image @? { token } ( .url ),
     animation_url = token_animation @? { token } ( .url )
   );
 }

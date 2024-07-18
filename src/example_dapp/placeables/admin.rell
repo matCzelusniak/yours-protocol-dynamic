@@ -1,22 +1,25 @@
-operation register_placeable(name, symbol: name, image: text, animation_url: text, height: integer, width: integer) {
+/**
+ * Mints a placeable token to the specified account.
+ * 
+ * The placeable collection is a non-fungible one which means that new tokens are created each time.
+ * 
+ * @param collection The collection name.
+ * @param token_name The token name.
+ * @param account_id The id of the account to mint the token to.
+ */
+operation mint_placeable(collection: name, token_name: name, account_id: byte_array) {
   val spec = yours.token_specification(
-    name,
-    symbol,
-    decimals = 0,
-    icon_url = image,
-    modules = [rell.meta(register_placeable).module_name]
+    project = "Example Project",
+    collection,
+    name = token_name,
+    modules = [rell.meta(mint_placeable).module_name]
   );
+  val token = yours.create_token_with_incremental_id(spec);
+  create placeable(token, width = 10, height = 10);
 
-  val token = yours.define_token(spec);
-  yours.attach_animation(token, animation_url);
-  create placeable(token, height, width);
-}
-
-operation give_placeable(token_id: byte_array, amount: integer, account_id: byte_array) {
-  val token = yours.token @ { .asset.id == token_id };
   yours.mint_tokens(
     token, 
     yours.balance_specification(
-      accounts.account @ { .id == account_id }, 
-      amount));
+      ft4.accounts.account @ { .id == account_id }, 
+      1));
 }

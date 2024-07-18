@@ -1,5 +1,5 @@
 @extend(yours.before_init_transfer)
-function before_init_transfer(yours.token) {
+function before_init_transfer(yours.token, ft4.accounts.account) {
   delete placed_position @? { .placeable.token == token };
 }
 
