@@ -8,11 +8,10 @@
  * @param modules The modules of the token.
  */
 struct token_specification {
+  project: name;
+  collection: name;
   name: name;
-  symbol: name;
-  decimals: integer;
-  icon_url: text;
-  modules: list<name>;
+  modules: list<name>?;
 }
 
 /**
@@ -23,7 +22,7 @@ struct token_specification {
  */
 struct balance_specification {
   account: ft4.accounts.account;
-  amount: big_integer;
+  amount: integer;
 }
 
 /**
@@ -36,7 +35,7 @@ struct balance_specification {
 struct transfer_specification {
   from: ft4.accounts.account;
   to: ft4.accounts.account;
-  amount: big_integer;
+  amount: integer;
 }
 
 /**
@@ -44,17 +43,37 @@ struct transfer_specification {
  *
  * @param spec the specification for the token
  */
-function define_token(spec: token_specification) {
-  val asset = ft4.assets.Unsafe.register_asset(
-    spec.name, 
-    spec.symbol,
-    spec.decimals,
-    chain_context.blockchain_rid,
-    spec.icon_url);
+function create_token_with_incremental_id(spec: token_specification) {
+  val project = ensure_project(spec.project);
+  val collection = ensure_collection(spec.collection, project);
+  val token = create token(spec.name, collection, _get_next_token_id(collection));
 
-  val token = create token(asset);
-  for (m in spec.modules) {
-    attach_module(token, m);
+  val modules = spec.modules;
+  if (modules != null) {
+    for (m in modules) {
+      attach_module(token, m);
+    }
+  }
+
+  return token;
+}
+
+/**
+ * Define a new token with a specific ID.
+ *
+ * @param spec the specification for the token
+ * @param token_id the token id
+ */
+function create_token_with_id(spec: token_specification, token_id: integer) {
+  val project = ensure_project(spec.project);
+  val collection = ensure_collection(spec.collection, project);
+  val token = create token(spec.name, collection, _get_next_token_id(collection));
+
+  val modules = spec.modules;
+  if (modules != null) {
+    for (m in modules) {
+      attach_module(token, m);
+    }
   }
 
   return token;
@@ -67,7 +86,9 @@ function define_token(spec: token_specification) {
  * @param animation_url to attach
  */
 function attach_animation(token, animation_url: text?): token_animation? {
-  delete token_animation @? { token };
+  if (token_animation @? { token } ( .url ) != animation_url) {
+    delete token_animation @? { token };
+  }
 
   if (animation_url != null) {
     return create token_animation(token, animation_url);
@@ -84,13 +105,45 @@ function attach_animation(token, animation_url: text?): token_animation? {
  * @param description to attach
  */
 function attach_description(token, description: text?): token_description? {
-  delete token_description @? { token };
+  if (token_description @? { token } ( .text ) != description) {
+    delete token_description @? { token };
+  }
 
   if (description != null) {
     return create token_description(token, description);
   }
 
   return null;
+}
+
+/**
+ * Attach an image to a token.
+ *
+ * @param token to update the image for
+ * @param image_url to update
+ */
+function attach_image(token, image_url: text?) {
+  if (token_image @? { token } ( .url ) != image_url) {
+    delete token_image @? { token };
+  }
+
+  if (image_url != null) {
+    return create token_image(token, image_url);
+  }
+
+  return null;
+}
+
+/**
+ * Attach modules to a token.
+ *
+ * @param token to attach the modules to
+ * @param modules to attach
+ */
+function attach_modules(token, modules: list<name>) {
+  for (m in modules) {
+    attach_module(token, m);
+  }
 }
 
 /**
@@ -101,37 +154,31 @@ function attach_description(token, description: text?): token_description? {
  */
 function attach_module(token, module_name: name) {
   val modules = module_name.split(".");
-  create token_module(token, modules[modules.size() - 1]);
-}
+  val name = modules[modules.size() - 1];
 
-/**
- * Update the image for a token.
- *
- * @param token to update the image for
- * @param image_url to update
- */
-function update_image(token, image_url: text) {
-  token.asset.icon_url = image_url;
+  if (token_module @? { token, name } == null) {
+    create token_module(token, name);
+  }
 }
 
 /**
  * Mint tokens to a specific account.
  *
- * @param token to mint
+ * @param token the token to mint from
  * @param spec the specification for the mint
  */
 function mint_tokens(token, spec: balance_specification) {
-  return ft4.assets.increase_balance(spec.account, token.asset, spec.amount);
+  _mint_balance(token, spec.account, spec.amount);
 }
 
 /**
  * Burn tokens from a specific account.
  *
- * @param token to burn
+ * @param token the token to burn from
  * @param spec the specification for the burn
  */
 function burn_tokens(token, spec: balance_specification) {
-  return ft4.assets.deduct_balance(spec.account, token.asset, spec.amount);
+  _burn_balance(token, spec.account, spec.amount);
 }
 
 /**
@@ -141,15 +188,45 @@ function burn_tokens(token, spec: balance_specification) {
  * @param spec the specification for the transfer
  */
 function transfer_tokens(token, spec: transfer_specification) {
-  ft4.assets.Unsafe.transfer(spec.from, spec.to, token.asset, spec.amount);
+  _burn_balance(token, spec.from, spec.amount);
+  _mint_balance(token, spec.to, spec.amount);
 }
 
 /**
- * Get the balance of a token for a specific account.
+ * Get a token by collection and token id.
  *
- * @param token to get the balance of
- * @param account to get the balance of
+ * @param collection the collection name
+ * @param token_id the token id
  */
-function get_token_balance(token, ft4.accounts.account) {
-  return ft4.assets.get_asset_balance(account, token.asset);
+function get_token(collection: name, token_id: integer): token? {
+  return token @? { .collection.name == collection, .id == token_id };
+}
+
+function _get_next_token_id(collection): integer {
+  return (token @? { collection } ( @max(.id) ) ?: -1) + 1;
+}
+
+function _get_token_balance(token, ft4.accounts.account) {
+  return token_balance @? { token, account };
+}
+
+function _mint_balance(token, ft4.accounts.account, amount: integer) {
+  val receiver_balance = _get_token_balance(token, account);
+  if (receiver_balance == null) {
+    create token_balance(token, account, amount);
+  } else {
+    receiver_balance.amount += amount;
+  }
+}
+
+function _burn_balance(token, ft4.accounts.account, amount: integer) {
+  val token_balance = require(_get_token_balance(token, account), "Insufficient balance");
+  val new_amount = token_balance.amount - amount;
+  require(new_amount >= 0, "Insufficient balance");
+
+  if (new_amount == 0) {
+    delete token_balance;
+  } else {
+    token_balance.amount = new_amount;
+  }
 }

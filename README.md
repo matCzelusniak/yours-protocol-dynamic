@@ -134,17 +134,17 @@ Not every dapp will need minting support. It's only if you want to create your o
 If you do want to create a new asset, that can be done by defining a new `token`.
 
 ```kotlin
-operation register_equippable(name, symbol: name, slots: list<name>, image: text, animation_url: text) {
+operation register_equippable(name, symbol: name, slots: list<name>, image_url: text, animation_url: text) {
   val spec = yours.token_specification(
+    project,
+    collection,
     name,
-    symbol,
-    decimals = 0,
-    icon_url = image,
     modules = [rell.meta(register_equippable).module_name]
   );
 
   val token = yours.define_token(spec);
   yours.attach_animation(token, animation_url);
+  yours.attach_image(token, image_url);
 
   val equippable = create equippable(token);
   for (slot in slots) {
@@ -153,23 +153,16 @@ operation register_equippable(name, symbol: name, slots: list<name>, image: text
 }
 ```
 
-There are a couple of optional things you can do here in terms of generic metadata. In the example above, we attach an `animation_url`. You can also attach a `description` of your token if you want to.
+There are a couple of optional things you can do here in terms of generic metadata. In the example above, we attach an `animation_url`. You can also attach a `description` and `image` of your token if you want to.
 
 Below that, we create a new `equippable` entity and `occupying_slot` entities for each slot that was passed in, which is specific for your dapp and how you choose to represent the token.
 
 After that, you can mint this token by calling:
 
 ```kotlin
-operation mint_token(token_id: byte_array, amount: integer, account_id: byte_array) {
-  val token = yours.token @ { .asset.id == token_id };
+operation mint_token(collection: name, token_id: integer, amount: integer, account_id: byte_array) {
+  val token = yours.get_token(collection, token_id);
   val account = accounts.account @ { .id == account_id };
   yours.mint_tokens(token, yours.balance_specification(account, amount));
 }
-```
-
-The `token_id` gets created by `FT4` when you define the token. But you can also specify the `token` by its `name`.
-
-
-```kotlin
-val token = yours.token @ { .asset.name == asset_name };
 ```

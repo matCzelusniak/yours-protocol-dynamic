@@ -1,4 +1,7 @@
 module;
 
 import lib.yours;
-import lib.ft4.accounts;
+
+namespace ft4 {
+  import lib.ft4.accounts;
+}

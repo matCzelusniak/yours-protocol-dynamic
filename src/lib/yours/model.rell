@@ -1,11 +1,48 @@
 /**
+ * A project that can contain multiple collections.
+ * 
+ * @param name The name of the project.
+ */
+entity project {
+  key name;
+}
+
+/**
+ * A collection of tokens.
+ * 
+ * @param name The name of the collection.
+ * @param project The project that this collection belongs to.
+ */
+entity collection {
+  key name, project;
+}
+
+/**
  * The underlying token which can be either fungible or non-fungible.
  * Dapps are expected to create their own entities which references this token.
  * 
  * @param asset The FT4 asset that this token wraps.
+ * @param collection The collection that this token belongs to.
  */
 entity token {
-  key ft4.assets.asset;
+  key collection, id: integer;
+  mutable name;
+}
+
+entity token_balance {
+  key token, ft4.accounts.account;
+  mutable amount: integer;
+}
+
+/**
+ * The image for a token. Compatible with ERC721 OpenSea standard.
+ * 
+ * @param token The token.
+ * @param url The URL of the image. This is mutable since the image can change.
+ */
+entity token_image {
+  key token;
+  mutable url: text;
 }
 
 /**

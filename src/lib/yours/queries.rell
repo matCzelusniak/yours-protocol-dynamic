@@ -4,7 +4,7 @@
  * @param token_id of the token to get the metadata for
  * @returns The metadata of the token.
  */
-query metadata(token_id: byte_array): token_metadata? {
-  val token = token @? { .asset.id == token_id };
+query metadata(collection: name, token_id: integer): token_metadata? {
+  val token = get_token(collection, token_id);
   return if (token != null) get_metadata(token) else null;
 }

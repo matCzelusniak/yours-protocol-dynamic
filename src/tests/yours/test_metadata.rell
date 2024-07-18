@@ -2,38 +2,34 @@ function test_metadata() {
   // Register FT4 Account to mint tokens to
   val alice = create_test_account(rell.test.keypairs.alice);
 
-  // Admin registratrion of Placeables and Equippables
+  // Pre-register equippable since that one is a fungible token.
   rell.test
     .tx()
-    .op(placeables.register_placeable(util.PLACEABLE_A.name, util.PLACEABLE_A.symbol, util.PLACEABLE_A.image, util.PLACEABLE_A.animation_url, 10, 10))
-    .op(placeables.register_placeable(util.PLACEABLE_B.name, util.PLACEABLE_B.symbol, util.PLACEABLE_B.image, util.PLACEABLE_B.animation_url, 10, 10))
-    .op(equippables.register_equippable(util.EQUIPPABLE_A.name, util.EQUIPPABLE_A.symbol, ["hat"], util.EQUIPPABLE_A.image, util.EQUIPPABLE_A.animation_url))
+    .op(equippables.register_equippable(util.EQUIPPABLE_A.collection, util.EQUIPPABLE_A.name, util.EQUIPPABLE_A.symbol, ["hat"], util.EQUIPPABLE_A.image, util.EQUIPPABLE_A.animation_url))
     .run();
-
-  val asset_placeable_token_id = assets.asset @ { .name == util.PLACEABLE_A.name } ( .id );
-  val asset_placeable_b_token_id = assets.asset @ { .name == util.PLACEABLE_B.name } ( .id );
-  val asset_equippable_token_id = assets.asset @ { .name == util.EQUIPPABLE_A.name } ( .id );
 
   // Give Placeables and Equippables to FT4 Account
   rell.test
     .tx()
-    .op(placeables.give_placeable(asset_placeable_token_id, 1, alice.account.id))
-    .op(placeables.give_placeable(asset_placeable_b_token_id, 10, alice.account.id))
-    .op(equippables.give_equippable(asset_equippable_token_id, 1, alice.account.id))
+    .op(placeables.mint_placeable(util.PLACEABLE_A.collection, util.PLACEABLE_A.name, alice.account.id))
+    .op(placeables.mint_placeable(util.PLACEABLE_B.collection, util.PLACEABLE_B.name, alice.account.id))
+    .op(equippables.mint_equippable(util.EQUIPPABLE_A.collection, 0, 1, alice.account.id))
     .run();
 
   // Attach metadata to token by utilizing them
   rell.test
     .tx()
     .op(auth_op(rell.test.keypairs.alice))
-    .op(placeables.place(30713531, 0, 0, asset_placeable_token_id))
+    .op(placeables.place(30713531, 0, 0, util.PLACEABLE_A.collection, 0))
     .op(auth_op(rell.test.keypairs.alice))
-    .op(placeables.place(30713531, 0, 9, asset_placeable_b_token_id))
+    .op(placeables.place(30713531, 0, 9, util.PLACEABLE_B.collection, 1))
     .sign(rell.test.keypairs.alice)
     .run();
 
-  val placeble_a_metadata = yours.metadata(asset_placeable_token_id);
-  val equippable_a_metadata = yours.metadata(asset_equippable_token_id);
+  val placeble_a_metadata = yours.metadata(util.PLACEABLE_A.collection, 0);
+  val placeble_b_metadata = yours.metadata(util.PLACEABLE_B.collection, 1);
+  val equippable_a_metadata = yours.metadata(util.EQUIPPABLE_A.collection, 0);
   log(placeble_a_metadata?.to_gtv_pretty()?.to_json());
+  log(placeble_b_metadata?.to_gtv_pretty()?.to_json());
   log(equippable_a_metadata?.to_gtv_pretty()?.to_json());
 }
