@@ -68,14 +68,17 @@ function create_token_with_incremental_id(spec: token_specification) {
  * @param animation_url to attach
  */
 function attach_animation(token, animation_url: text?): token_animation? {
-  if (token_animation @? { token } ( .url ) != animation_url) {
-    delete token_animation @? { token };
+  val token_animation = token_animation @? { token };
+  val existing_animation = token_animation?.url;
+
+  if (existing_animation == animation_url) return token_animation;
+  if (token_animation != null and existing_animation != animation_url) {
+    delete token_animation;
   }
 
   if (animation_url != null) {
     return create token_animation(token, animation_url);
   }
-
   return null;
 }
 
@@ -86,14 +89,17 @@ function attach_animation(token, animation_url: text?): token_animation? {
  * @param description to attach
  */
 function attach_description(token, description: text?): token_description? {
-  if (token_description @? { token } ( .text ) != description) {
-    delete token_description @? { token };
+  val token_description = token_description @? { token };
+  val existing_description = token_description?.text;
+
+  if (existing_description == description) return token_description;
+  if (token_description != null and existing_description != description) {
+    delete token_description;
   }
 
   if (description != null) {
     return create token_description(token, description);
   }
-
   return null;
 }
 
@@ -104,8 +110,12 @@ function attach_description(token, description: text?): token_description? {
  * @param image_url to update
  */
 function attach_image(token, image_url: text?) {
-  if (token_image @? { token } ( .url ) != image_url) {
-    delete token_image @? { token };
+  val token_image = token_image @? { token };
+  val existing_image = token_image?.url;
+
+  if (existing_image == image_url) return token_image; // No change
+  if (token_image != null and existing_image != image_url) {
+    delete token_image;
   }
 
   if (image_url != null) {
@@ -181,6 +191,13 @@ function transfer_tokens(token, spec: transfer_specification) {
  */
 function get_token(collection: name, token_id: integer): token? {
   return token @? { .collection.name == collection, .id == token_id };
+}
+
+/**
+ * An active token is one where there exists a balance for the token.
+ */
+function get_active_token(collection: name, token_id: integer): token? {
+  return token_balance @? { .token.collection.name == collection, .token.id == token_id } ( .token );
 }
 
 function _create_token(spec: token_specification, collection, token_id: integer) {

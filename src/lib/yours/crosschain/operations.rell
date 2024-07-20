@@ -80,7 +80,13 @@ function _apply_transfer(account_id: byte_array, token, amount: integer, token_m
   mint_tokens(token, balance_specification(amount, ft4.accounts.account @ { account_id }));
   _apply_common_metadata(token, token_metadata);
 
-  create imported_attributes ( token, token_metadata.attributes.to_gtv().to_json() );
+  val imported_attributes = imported_attributes @? { token };
+  if (imported_attributes == null) {
+    create imported_attributes ( token, token_metadata.attributes.to_gtv().to_json() );
+  } else {
+    imported_attributes.json = token_metadata.attributes.to_gtv().to_json();
+  }
+
   val attributes = map<name, gtv>();
   for (attribute in token_metadata.attributes) {
     attributes.put(attribute.trait_type, attribute.value);

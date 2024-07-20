@@ -93,5 +93,5 @@ entity token_module {
  */
 entity imported_attributes {
   key token;
-  json;
+  mutable json;
 }
