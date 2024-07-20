@@ -3,7 +3,7 @@
  */
 struct token_metadata {
   name;
-  attributes: set<token_attribute>;
+  attributes: list<token_attribute>;
   yours: yours_metadata;
   description: text?;
   image: text?;
@@ -34,16 +34,19 @@ struct token_attribute {
  * @param token The token to get the metadata for.
  */
 function get_metadata(token): token_metadata {
-  val base_metadata = imported_attributes @? { token } ( set<token_attribute>.from_gtv(gtv.from_json($.json)) ) ?: set<token_attribute>();
+  val base_metadata = imported_attributes @? { token } ( map<text, gtv>.from_gtv(gtv.from_json($.json)) ) ?: map<text, gtv>();
   val metadata = populate_metadata(token, set(token_module @* { token } ( .module_name ))) ?: map<text, gtv>();
 
-  for (trait_type in metadata.keys()) {
-    base_metadata.add(token_attribute(trait_type, value = metadata[trait_type]));
+  base_metadata.put_all(metadata);
+
+  val attributes = list<token_attribute>();
+  for (trait_type in base_metadata.keys()) {
+    attributes.add(token_attribute(trait_type, value = base_metadata[trait_type]));
   }
 
   return token_metadata(
     name = token.name,
-    attributes = base_metadata,
+    attributes,
     yours = yours_metadata(
       collection = token.collection.name,
       project = token.collection.project.name,
