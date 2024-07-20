@@ -39,26 +39,6 @@ struct transfer_specification {
 }
 
 /**
- * Define a new token on the blockchain.
- *
- * @param spec the specification for the token
- */
-function create_token_with_incremental_id(spec: token_specification) {
-  val project = ensure_project(spec.project);
-  val collection = ensure_collection(spec.collection, project);
-  val token = create token(spec.name, collection, _get_next_token_id(collection));
-
-  val modules = spec.modules;
-  if (modules != null) {
-    for (m in modules) {
-      attach_module(token, m);
-    }
-  }
-
-  return token;
-}
-
-/**
  * Define a new token with a specific ID.
  *
  * @param spec the specification for the token
@@ -67,16 +47,18 @@ function create_token_with_incremental_id(spec: token_specification) {
 function create_token_with_id(spec: token_specification, token_id: integer) {
   val project = ensure_project(spec.project);
   val collection = ensure_collection(spec.collection, project);
-  val token = create token(spec.name, collection, _get_next_token_id(collection));
+  return _create_token(spec, collection, token_id);
+}
 
-  val modules = spec.modules;
-  if (modules != null) {
-    for (m in modules) {
-      attach_module(token, m);
-    }
-  }
-
-  return token;
+/**
+ * Define a new token on the blockchain.
+ *
+ * @param spec the specification for the token
+ */
+function create_token_with_incremental_id(spec: token_specification) {
+  val project = ensure_project(spec.project);
+  val collection = ensure_collection(spec.collection, project);
+  return _create_token(spec, collection, _get_next_token_id(collection));
 }
 
 /**
@@ -96,7 +78,6 @@ function attach_animation(token, animation_url: text?): token_animation? {
 
   return null;
 }
-
 
 /**
  * Attach a description to a token.
@@ -200,6 +181,19 @@ function transfer_tokens(token, spec: transfer_specification) {
  */
 function get_token(collection: name, token_id: integer): token? {
   return token @? { .collection.name == collection, .id == token_id };
+}
+
+function _create_token(spec: token_specification, collection, token_id: integer) {
+  val token = create token(spec.name, collection, token_id);
+
+  val modules = spec.modules;
+  if (modules != null) {
+    for (m in modules) {
+      attach_module(token, m);
+    }
+  }
+
+  return token;
 }
 
 function _get_next_token_id(collection): integer {

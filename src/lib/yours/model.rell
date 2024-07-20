@@ -94,5 +94,5 @@ entity token_module {
  */
 entity imported_attribute {
   key token, trait_type: name;
-  value: json;
+  value: byte_array;
 }

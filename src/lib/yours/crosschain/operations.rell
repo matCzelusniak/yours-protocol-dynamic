@@ -74,7 +74,7 @@ operation apply_transfer(
 
   val attributes = map<name, gtv>();
   for (attribute in transferred_metadata.attributes) {
-    create imported_attribute ( token, trait_type = attribute.trait_type, value = attribute.value.to_json() );
+    create imported_attribute ( token, trait_type = attribute.trait_type, value = attribute.value.to_bytes() );
     attributes.put(attribute.trait_type, attribute.value);
   }
 
