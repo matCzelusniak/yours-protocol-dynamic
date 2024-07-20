@@ -2,9 +2,9 @@
  * Returns the metadata of all modules the token has been used within.
  *
  * @param token_id of the token to get the metadata for
- * @returns The metadata of the token.
+ * @returns The metadata of the token in JSON format in order to handle generic attributes values.
  */
-query metadata(collection: name, token_id: integer): token_metadata? {
+query metadata(collection: name, token_id: integer): json? {
   val token = get_token(collection, token_id);
   return if (token != null) get_metadata(token) else null;
 }

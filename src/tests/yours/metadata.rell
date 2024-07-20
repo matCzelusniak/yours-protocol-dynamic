@@ -29,7 +29,7 @@ function test_metadata() {
   val placeble_a_metadata = yours.metadata(util.PLACEABLE_A.collection, 0);
   val placeble_b_metadata = yours.metadata(util.PLACEABLE_B.collection, 1);
   val equippable_a_metadata = yours.metadata(util.EQUIPPABLE_A.collection, 0);
-  log(placeble_a_metadata?.to_gtv_pretty()?.to_json());
-  log(placeble_b_metadata?.to_gtv_pretty()?.to_json());
-  log(equippable_a_metadata?.to_gtv_pretty()?.to_json());
+  log(placeble_a_metadata);
+  log(placeble_b_metadata);
+  log(equippable_a_metadata);
 }

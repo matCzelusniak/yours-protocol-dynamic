@@ -1,7 +1,7 @@
 module;
 
 import lib.yours;
-import lib.ft4.assets;
+import lib.yours.crosschain;
 
 import example_dapp.placeables;
 import example_dapp.equippables;

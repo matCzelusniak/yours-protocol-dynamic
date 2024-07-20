@@ -33,8 +33,8 @@ struct token_attribute {
  *
  * @param token The token to get the metadata for.
  */
-function get_metadata(token): token_metadata {
-  val base_metadata = set(imported_attribute @* { token } ( token_attribute(trait_type = .trait_type, value = .value.to_gtv()) ));
+function get_metadata(token): json {
+  val base_metadata = imported_attributes @? { token } ( set<token_attribute>.from_gtv(gtv.from_json($.json)) ) ?: set<token_attribute>();
   val metadata = populate_metadata(token, set(token_module @* { token } ( .module_name ))) ?: map<text, gtv>();
 
   for (trait_type in metadata.keys()) {
@@ -52,5 +52,5 @@ function get_metadata(token): token_metadata {
     description = token_description @? { token } ( .text ),
     image = token_image @? { token } ( .url ),
     animation_url = token_animation @? { token } ( .url )
-  );
+  ).to_gtv_pretty().to_json();
 }

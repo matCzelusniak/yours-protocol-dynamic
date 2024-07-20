@@ -46,6 +46,14 @@ operation apply_transfer(
     init_tx_op_index
   );
 
+  // Add transfer to applied transfers table so that it cannot be applied more than once
+  val applied_transfer = create applied_transfers (
+    init_tx_rid = init_transfer_details.tx_rid,
+    init_op_index = init_tx_op_index,
+    transaction = op_context.transaction,
+    op_index = op_context.op_index
+  );
+
   var token = get_token(init_transfer_details.args.collection, init_transfer_details.args.token_id);
   val transferred_metadata = token_metadata.from_gtv_pretty(init_transfer_details.args.metadata);
 
@@ -60,25 +68,25 @@ operation apply_transfer(
       init_transfer_details.args.token_id
     );
   }
-  mint_tokens(token, balance_specification(init_transfer_details.args.amount, ft4.accounts.account @ { init_transfer_details.sender_account_id }));
-  // TODO: Apply module changes - can we handle this in a good way for both scenarios when a token exists or not?
-  _apply_common_metadata(token, transferred_metadata);
 
-  // Add transfer to applied transfers table so that it cannot be applied more than once
-  val applied_transfer = create applied_transfers (
-    init_tx_rid = init_transfer_details.tx_rid,
-    init_op_index = init_tx_op_index,
-    transaction = op_context.transaction,
-    op_index = op_context.op_index
-  );
+  _apply_transfer(
+    init_transfer_details.sender_account_id, 
+    token, 
+    init_transfer_details.args.amount, 
+    transferred_metadata);
+}
 
+function _apply_transfer(account_id: byte_array, token, amount: integer, token_metadata) {
+  mint_tokens(token, balance_specification(amount, ft4.accounts.account @ { account_id }));
+  _apply_common_metadata(token, token_metadata);
+
+  create imported_attributes ( token, token_metadata.attributes.to_gtv().to_json() );
   val attributes = map<name, gtv>();
-  for (attribute in transferred_metadata.attributes) {
-    create imported_attribute ( token, trait_type = attribute.trait_type, value = attribute.value.to_bytes() );
+  for (attribute in token_metadata.attributes) {
     attributes.put(attribute.trait_type, attribute.value);
   }
 
-  after_apply_transfer(token, set(transferred_metadata.yours.modules), attributes);
+  after_apply_transfer(token, set(token_metadata.yours.modules), attributes);
 }
 
 function _apply_common_metadata(token, metadata: token_metadata) {

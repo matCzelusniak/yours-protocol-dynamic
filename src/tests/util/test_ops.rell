@@ -1,23 +1,16 @@
-object PLACEABLE_A {
-  collection: text = "Placeable Collection";
-  name = "Placeable A";
-  symbol: text = "PA";
-  image: text = "https://assets.anichess.com/orb/1.jpg";
-  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
-}
+operation mock_apply_transfer(account_id: byte_array, token_id: integer, amount: integer, yours.token_metadata) {
+  val token = yours.create_token_with_id(yours.token_specification(
+    project = token_metadata.yours.project,
+    collection = token_metadata.yours.collection,
+    name = token_metadata.name,
+    modules = token_metadata.yours.modules
+  ),
+  token_id);
 
-object PLACEABLE_B {
-  collection: text = "Placeable Collection";
-  name = "Placeable B";
-  symbol: text = "PAB";
-  image: text = "https://assets.anichess.com/orb/1.jpg";
-  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
-}
-
-object EQUIPPABLE_A {
-  collection: text = "Equippable Collection";
-  name = "Equippable A";
-  symbol: text = "EA";
-  image: text = "https://assets.anichess.com/orb/1.jpg";
-  animation_url: text = "https://assets.anichess.com/orb/1.mp4";
+  crosschain._apply_transfer(
+    account_id,
+    token,
+    amount,
+    token_metadata
+  );
 }

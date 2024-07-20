@@ -89,10 +89,9 @@ entity token_module {
  * to a chain `C` then we must not lose the metadata of module `Y`.
  * 
  * @param token The token that this attribute belongs to.
- * @param trait_type The type of the attribute. This will be used on the FT4 layer.
- * @param value The value of the attribute.
+ * @param json The JSON representation of the attributes.
  */
-entity imported_attribute {
-  key token, trait_type: name;
-  value: byte_array;
+entity imported_attributes {
+  key token;
+  json;
 }
