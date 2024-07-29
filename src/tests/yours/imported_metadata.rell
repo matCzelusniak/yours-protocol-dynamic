@@ -1,6 +1,7 @@
 function test_imported_metadata_retains_expected_attributes() {
   val alice = create_test_account(rell.test.keypairs.alice);
-  
+
+  val project = "TestProject";
   val collection = "TestCollection";
   val token_id = 0;
 
@@ -13,12 +14,12 @@ function test_imported_metadata_retains_expected_attributes() {
         1,
         yours.token_metadata(
           name = "test",
-          attributes = set([
+          attributes = [
             yours.token_attribute(trait_type = "IntegerKey", integer(1).to_gtv()),
             yours.token_attribute(trait_type = "TextKey", "TextValue".to_gtv())
-          ]),
+          ],
           yours = yours.yours_metadata(
-            project = "TestProject",
+            project = project,
             collection = collection,
             modules = ["TestModule"]
           ),
@@ -30,6 +31,6 @@ function test_imported_metadata_retains_expected_attributes() {
     )
     .run();
 
-  val metadata = yours.metadata(collection, token_id);
+  val metadata = yours.metadata(project, collection, token_id);
   log("Metadata: ", metadata);
 }

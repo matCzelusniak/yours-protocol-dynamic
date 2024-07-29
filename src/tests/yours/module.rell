@@ -3,6 +3,7 @@
 import lib.yours;
 import lib.ft4.assets;
 
+import example_dapp.common;
 import example_dapp.equippables;
 import example_dapp.placeables;
 

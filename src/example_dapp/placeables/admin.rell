@@ -1,3 +1,4 @@
+
 /**
  * Mints a placeable token to the specified account.
  * 
@@ -9,17 +10,19 @@
  */
 operation mint_placeable(collection: name, token_name: name, account_id: byte_array) {
   val spec = yours.token_specification(
-    project = "Example Project",
+    project = common.PROJECT_NAME,
     collection,
     name = token_name,
     modules = [rell.meta(mint_placeable).module_name]
   );
   val token = yours.create_token_with_incremental_id(spec);
-  create placeable(token, width = 10, height = 10);
+  create placeable ( token, width = 10, height = 10 );
 
   yours.mint_tokens(
-    token, 
+    token,
     yours.balance_specification(
-      ft4.accounts.account @ { .id == account_id }, 
-      1));
+      ft4.accounts.account @ { .id == account_id },
+      1
+    )
+  );
 }
