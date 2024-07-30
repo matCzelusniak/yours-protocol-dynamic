@@ -45,7 +45,7 @@ struct transfer_specification {
  * @param spec the specification for the token
  * @param token_id the token id
  */
-function create_token_with_id(spec: token_specification, token_id: integer) {
+function create_token_with_id(spec: token_specification, token_id: integer): token {
   val project = ensure_project(spec.project);
   val collection = ensure_collection(spec.collection, project);
   return _create_token(spec, collection, token_id);
@@ -56,7 +56,7 @@ function create_token_with_id(spec: token_specification, token_id: integer) {
  *
  * @param spec the specification for the token
  */
-function create_token_with_incremental_id(spec: token_specification) {
+function create_token_with_incremental_id(spec: token_specification): token {
   val project = ensure_project(spec.project);
   val collection = ensure_collection(spec.collection, project);
   return _create_token(spec, collection, _get_next_token_id(collection));
@@ -110,11 +110,11 @@ function attach_description(token, description: text?): token_description? {
  * @param token to update the image for
  * @param image_url to update
  */
-function attach_image(token, image_url: text?) {
+function attach_image(token, image_url: text?): token_image? {
   val token_image = token_image @? { token };
   val existing_image = token_image?.url;
 
-  if (existing_image == image_url) return token_image; // No change
+  if (existing_image == image_url) return token_image;
   if (token_image != null and existing_image != image_url) {
     delete token_image;
   }
