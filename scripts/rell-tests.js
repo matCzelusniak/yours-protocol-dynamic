@@ -46,7 +46,7 @@ async function main() {
 }
 
 const prestartCommand =
-  'npm run prestart:dev';
+  'npm run prestart:test';
 
 exec(`${prestartCommand}`, (err, stdout, stderr) => {
   if (err) {

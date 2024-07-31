@@ -5,10 +5,9 @@
   "scripts": {
     "start:network": "docker network create yours_network",
     "start:postgres": "docker run -e POSTGRES_DB=postchain -e POSTGRES_USER=postchain -e POSTGRES_PASSWORD=postchain --network yours_network -p 5432:5432 -d --name yours_postgres postgres:14.1-alpine",
-    "start:dev": "npm run prestart:dev && node scripts/start.js dev",
     "stop": "docker rm -f -v fondaco_blockchain yours_postgres || true && docker network rm yours_network || true",
     "postinstall": "chr install",
-    "prestart:dev": "npm run stop && npm run start:network && npm run start:postgres",
+    "prestart:test": "npm run stop && npm run start:network && npm run start:postgres",
     "test": "node scripts/rell-tests.js"
   },
   "keywords": [],
