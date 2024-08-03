@@ -3,12 +3,12 @@ operation place(plot_id: integer, x: integer, y: integer, collection: name, toke
 
   val token = require(yours.get_token(common.PROJECT_NAME, collection, token_id));
   val locked_account = yours.ensure_locked_account(account.id);
-  val spec = yours.transfer_specification(
+  val info = yours.transfer_info(
     from = account,
     to = locked_account,
     amount = 1
   );
-  yours.transfer_tokens(token, spec);
+  yours.transfer(token, info);
 
   val placeable = placeable @ { .token.id == token_id };
   delete placed_position @? { plot_id, x, y };
@@ -25,12 +25,12 @@ operation unplace(plot_id: integer, x: integer, y: integer) {
   };
 
   val locked_account = yours.ensure_locked_account(account.id);
-  val spec = yours.transfer_specification(
+  val info = yours.transfer_info(
     from = locked_account,
     to = account,
     amount = 1
   );
-  yours.transfer_tokens(placed_position.placeable.token, spec);
+  yours.transfer(placed_position.placeable.token, info);
 
   delete placed_position;
 }

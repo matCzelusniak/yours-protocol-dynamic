@@ -1,11 +1,13 @@
 operation mock_apply_transfer(account_id: byte_array, token_id: integer, amount: integer, yours.token_metadata) {
-  val token = yours.create_token_with_id(yours.token_specification(
-    project = token_metadata.yours.project,
-    collection = token_metadata.yours.collection,
-    name = token_metadata.name,
-    modules = token_metadata.yours.modules
-  ),
-  token_id);
+  val token = yours.create_token_with_id(
+    yours.token_info(
+      project = token_metadata.yours.project,
+      collection = token_metadata.yours.collection,
+      name = token_metadata.name,
+      modules = token_metadata.yours.modules
+    ),
+    token_id
+  );
 
   crosschain._apply_transfer(
     account_id,
