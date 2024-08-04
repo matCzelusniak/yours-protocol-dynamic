@@ -3,7 +3,6 @@ import { createInMemoryFtKeyStore, createKeyStoreInteractor, createSingleSigAuth
 
 export async function createAccount(client: IClient, keyPair: KeyPair) {
   const keyStore = createInMemoryFtKeyStore(keyPair);
-
   const keyStoreInteractor = createKeyStoreInteractor(
     client,
     keyStore
@@ -19,6 +18,5 @@ export async function createAccount(client: IClient, keyPair: KeyPair) {
       flags: []
     }
   }));
-
   return session;
 }

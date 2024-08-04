@@ -1,44 +1,27 @@
 import { IClient, encryption } from "postchain-client";
 import { createAccount } from "./utils/ft4";
-import { setupTestEnvironment, teardownTestEnvironment } from "./utils/setup";
+import { getTestEnvironment, teardown, TestEnvironment } from "./utils/setup";
 import { TEST_PROJECT, TIMEOUT_SETUP, TIMEOUT_TEST } from "./utils/constants";
-import { StartedNetwork, StartedTestContainer } from "testcontainers";
-import { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { op } from "@chromia/ft4";
 import { TokenMetadata } from "./utils/types";
 import { serializeTokenMetadata } from "./utils/metadata";
-import { expect } from "@jest/globals"; // Added this line to import expect from Jest
+import { expect } from "@jest/globals";
 import { randomCollectionName } from "./utils/random";
 
-describe('Token', () => {
-  let network: StartedNetwork;
-  let postgres: StartedPostgreSqlContainer;
-  let container: StartedTestContainer;
-  let dapp1Client: IClient;
-  let dapp2Client: IClient;
+describe('Non-Fungible Token', () => {
+  let environment: TestEnvironment;
 
   beforeAll(async () => {
-    const {
-      dapp1Client: dapp1,
-      dapp2Client: dapp2,
-      network: n,
-      postgres: p,
-      container: c
-    } = await setupTestEnvironment();
-    dapp1Client = dapp1;
-    dapp2Client = dapp2;
-    network = n;
-    postgres = p;
-    container = c;
+    environment = await getTestEnvironment();
   }, TIMEOUT_SETUP);
 
   afterAll(async () => {
-    await teardownTestEnvironment(network, postgres, container);
-  });
+    await teardown();
+  }, TIMEOUT_SETUP);
 
   it('able to create a Non-Fungible Token', async () => {
     const keyPair = encryption.makeKeyPair();
-    const session = await createAccount(dapp1Client, keyPair);
+    const session = await createAccount(environment.dapp1Client, keyPair);
 
     const collection = randomCollectionName();
     const tokenId = 0;
@@ -74,7 +57,7 @@ describe('Token', () => {
 
   it('NFT has correct metadata', async () => {
     const keyPair = encryption.makeKeyPair();
-    const session = await createAccount(dapp1Client, keyPair);
+    const session = await createAccount(environment.dapp1Client, keyPair);
 
     const collection = randomCollectionName();
     const tokenId = 1;
