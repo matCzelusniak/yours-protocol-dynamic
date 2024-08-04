@@ -200,6 +200,10 @@ function get_token(project: name, collection: name, token_id: integer): token? {
 
 /**
  * An active token is one where there exists a balance for the token.
+ *
+ * @param project the project name
+ * @param collection the collection name
+ * @param token_id the token id
  */
 function get_active_token(project: name, collection: name, token_id: integer): token? {
   return token_balance @? {
@@ -207,6 +211,16 @@ function get_active_token(project: name, collection: name, token_id: integer): t
     .token.collection.name == collection,
     .token.id == token_id
   } ( .token );
+}
+
+/**
+ * Get the balance of a token for a specific account.
+ *
+ * @param token the token to get the balance for
+ * @param account the account to get the balance for
+ */
+function get_balance(token, account: ft4.accounts.account): integer {
+  return token_balance @? { token, account } ( .amount ) ?: 0;
 }
 
 function _create_token(info: token_info, collection, token_id: integer) {

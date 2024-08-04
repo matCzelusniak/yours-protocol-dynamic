@@ -1,12 +1,21 @@
 blockchains:
-  example_dapp:
-    module: example_dapp
-  yours:
-    module: lib.yours
-    type: library
-    test:
-      modules:
-        - tests
+  example_dapp1:
+    module: example_dapp1
+    moduleArgs:
+      lib.ft4.core.accounts:
+        rate_limit:
+          active: false
+
+  example_dapp2:
+    module: example_dapp2
+    moduleArgs:
+      lib.ft4.core.accounts:
+        rate_limit:
+          active: false
+
+test:
+  modules:
+    - tests
 
 libs:
   ft4:
@@ -27,4 +36,4 @@ compile:
 
 database:
   schema: yours
-  host: yours_postgres
+  host: postgres

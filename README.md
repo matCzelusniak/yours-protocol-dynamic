@@ -1,5 +1,7 @@
 # Yours Protocol
 
+![Integration Tests](https://github.com/megayours/yours-protocol/actions/workflows/integration-tests.yml/badge.svg)
+
 Yours Protocol is a groundbreaking token standard built on Chromia's relational blockchain, enabling dynamic on-chain metadata and promoting composability and interoperability.
 
 ## 🌟 Key Features

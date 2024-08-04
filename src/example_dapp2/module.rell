@@ -1,0 +1,9 @@
+@mount("example_dapp2")
+module;
+
+import .avatars;
+
+import lib.yours;
+import lib.yours.crosschain;
+import lib.iccf;
+import lib.ft4.accounts.strategies.open;

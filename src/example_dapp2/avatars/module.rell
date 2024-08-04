@@ -1,6 +1,5 @@
+@mount("avatars")
 module;
-
-import ^.common;
 
 import lib.yours;
 

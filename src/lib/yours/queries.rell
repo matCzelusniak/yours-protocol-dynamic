@@ -1,3 +1,4 @@
+
 /**
  * Returns the metadata of all modules the token has been used within.
  *
@@ -7,4 +8,14 @@
 query metadata(project: name, collection: name, token_id: integer): token_metadata? {
   val token = get_active_token(project, collection, token_id);
   return if (token != null) get_metadata(token) else null;
+}
+
+query balance(account_id: byte_array, project: name, collection: name, token_id: integer): integer {
+  val token = get_active_token(project, collection, token_id);
+  if (token == null) return 0;
+
+  val account = ft4.accounts.account @? { account_id };
+  if (account == null) return 0;
+
+  return get_balance(token, account);
 }
