@@ -5,7 +5,7 @@
  * @param token_id of the token to get the metadata for
  * @returns The metadata of the token in JSON format in order to handle generic attributes values.
  */
-query metadata(project: name, collection: name, token_id: integer): token_metadata? {
+query metadata(project: name, collection: name, token_id: integer): token_metadata_outgoing? {
   val token = get_active_token(project, collection, token_id);
   return if (token != null) get_metadata(token) else null;
 }

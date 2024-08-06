@@ -3,7 +3,7 @@ function () = auth.add_auth_handler(
   flags = []
 );
 
-operation nft(metadata: yours.token_metadata, token_id: integer) {
+operation nft(metadata: yours.token_metadata_incoming, token_id: integer) {
   val account = auth.authenticate();
 
   val token = yours.create_token_with_id(
@@ -16,19 +16,19 @@ operation nft(metadata: yours.token_metadata, token_id: integer) {
     token_id
   );
 
-  create tracker.tracker ( token, op_context.last_block_time );
+  create yours.imported_attributes ( token, json = metadata.properties );
 
-  create yours.imported_attributes ( token, json = metadata.attributes.to_gtv().to_json() );
-
-  yours.attach_module(token, "tracker");
   yours.attach_image(token, metadata.image);
   yours.attach_description(token, metadata.description);
   yours.attach_animation(token, metadata.animation_url);
 
+  shared_module.attach(token);
+  tracker.attach(token);
+
   yours.mint(token, yours.balance_info(account, amount = 1));
 }
 
-operation sft(metadata: yours.token_metadata) {
+operation sft(metadata: yours.token_metadata_incoming) {
   auth.authenticate();
 
   val token = yours.create_token(
@@ -41,12 +41,14 @@ operation sft(metadata: yours.token_metadata) {
   );
 
   create tracker.tracker ( token, op_context.last_block_time );
-  create yours.imported_attributes ( token, json = metadata.attributes.to_gtv().to_json() );
+  create yours.imported_attributes ( token, json = metadata.properties );
 
-  yours.attach_module(token, "tracker");
   yours.attach_image(token, metadata.image);
   yours.attach_description(token, metadata.description);
   yours.attach_animation(token, metadata.animation_url);
+
+  shared_module.attach(token);
+  tracker.attach(token);
 }
 
 operation mint(project: name, collection: name, token_id: integer, amount: integer) {

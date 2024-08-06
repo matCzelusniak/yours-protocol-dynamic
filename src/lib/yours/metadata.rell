@@ -1,13 +1,35 @@
+
 /**
- * A single token's metadata. An extension of the ERC721 OpenSea standard.
+ * A single token's metadata. An extension of the ERC1155 Metadata standard.
+ * 
+ * Incomining should be used as operation input since map<text, gtv> is not serializable
+ * without losing the name of the nested properties.
  */
-struct token_metadata {
+struct token_metadata_incoming {
   name;
-  attributes: list<token_attribute>;
+  properties: json;
   yours: yours_metadata;
+  // decimals: integer?; // TODO: Add decimals
   description: text?;
   image: text?;
   animation_url: text?;
+  // localization: localization?; // TODO: Add localization
+}
+
+/**
+ * A single token's metadata. An extension of the ERC1155 Metadata standard.
+ * 
+ * Outgoing should be used as query output in order to preserve the name of the nested properties.
+ */
+struct token_metadata_outgoing {
+  name;
+  properties: map<text, gtv>;
+  yours: yours_metadata;
+  // decimals: integer?; // TODO: Add decimals
+  description: text?;
+  image: text?;
+  animation_url: text?;
+  // localization: localization?; // TODO: Add localization
 }
 
 /**
@@ -33,20 +55,17 @@ struct token_attribute {
  *
  * @param token The token to get the metadata for.
  */
-function get_metadata(token): token_metadata {
-  val base_metadata = imported_attributes @? { token } ( map<text, gtv>.from_gtv(gtv.from_json($.json)) ) ?: map<text, gtv>();
+function get_metadata(token): token_metadata_outgoing {
+  val base_metadata = imported_attributes @? {
+    token
+  } ( _json_to_gtv_map ($.json) ) ?: map<text, gtv>();
   val metadata = populate_metadata(token, set(token_module @* { token } ( .module_name ))) ?: map<text, gtv>();
 
   base_metadata.put_all(metadata);
 
-  val attributes = list<token_attribute>();
-  for (trait_type in base_metadata.keys()) {
-    attributes.add(token_attribute(trait_type, value = base_metadata[trait_type]));
-  }
-
-  return token_metadata(
+  return token_metadata_outgoing(
     name = token.name,
-    attributes,
+    properties = base_metadata,
     yours = yours_metadata(
       collection = token.collection.name,
       project = token.collection.project.name,

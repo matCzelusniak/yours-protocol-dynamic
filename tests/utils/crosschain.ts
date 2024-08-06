@@ -2,6 +2,7 @@ import { Session, transactionBuilder } from "@chromia/ft4";
 import { noopAuthenticator, op } from "@chromia/ft4";
 import { TokenMetadata } from "./types";
 import { IClient } from "postchain-client";
+import { serializeTokenMetadata } from "./metadata";
 
 export async function performCrossChainTransfer(
   fromSession: Session,
@@ -21,23 +22,40 @@ export async function performCrossChainTransfer(
           metadata.yours.collection,
           tokenId,
           amount,
-          metadata
+          serializeTokenMetadata(metadata)
         ), {
-          onAnchoredHandler: async (data: any) => {
-            if (!data) throw new Error("No data provided");
-            const iccfProofOperation = await data.createProof(toChain.config.blockchainRid);
+          onAnchoredHandler: async (initData: any) => {
+            if (!initData) throw new Error("No data provided after init_transfer");
+            const iccfProofOperation = await initData.createProof(toChain.config.blockchainRid);
             await transactionBuilder(noopAuthenticator, toChain)
               .add(iccfProofOperation, {
                 authenticator: noopAuthenticator,
               })
               .add(op(
                 "yours.apply_transfer",
-                data.tx,
-                data.opIndex
+                initData.tx,
+                initData.opIndex
               ), {
                 authenticator: noopAuthenticator,
+                onAnchoredHandler: async (applyData: any) => {
+                  if (!applyData) throw new Error("No data provided after apply_transfer");
+                  const iccfProofOperation = await applyData.createProof(fromSession.blockchainRid);
+                  await fromSession.transactionBuilder()
+                    .add(iccfProofOperation, {
+                      authenticator: noopAuthenticator,
+                    })
+                    .add(op(
+                      "yours.complete_transfer",
+                      applyData.tx,
+                      applyData.opIndex
+                    ), {
+                      authenticator: noopAuthenticator,
+                    })
+                    .buildAndSend();
+                }
               })
-              .buildAndSend();
+              .buildAndSendWithAnchoring();
+
             resolve();
           }
         })

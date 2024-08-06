@@ -1,6 +1,7 @@
 module;
 
 import .avatars;
+import shared_module;
 
 import lib.yours;
 import lib.yours.crosschain;

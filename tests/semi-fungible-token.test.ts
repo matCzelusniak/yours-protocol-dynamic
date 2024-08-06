@@ -27,7 +27,25 @@ describe('Semi-Fungible Token', () => {
 
     const tokenMetadata: TokenMetadata = {
       name: `A Test Semi-Fungible Token`,
-      attributes: [{ trait_type: "Background", value: "Blue" }],
+      properties: {
+        simple_property: "example value",
+        rich_property: {
+          name: "Name",
+          value: "123",
+          display_value: "123 Example Value",
+          class: "emphasis",
+          css: {
+            color: "#ffffff",
+            "font-weight": "bold",
+            "text-decoration": "underline"
+          }
+        },
+        array_property: {
+          name: "Name",
+          value: [1, 2, 3, 4],
+          class: "emphasis"
+        }
+      },
       yours: {
         modules: [],
         project: TEST_PROJECT,
@@ -51,7 +69,25 @@ describe('Semi-Fungible Token', () => {
 
     const tokenMetadata: TokenMetadata = {
       name: `A Test Semi-Fungible Token`,
-      attributes: [{ trait_type: "Background", value: "Blue" }],
+      properties: {
+        simple_property: "example value",
+        rich_property: {
+          name: "Name",
+          value: "123",
+          display_value: "123 Example Value",
+          class: "emphasis",
+          css: {
+            color: "#ffffff",
+            "font-weight": "bold",
+            "text-decoration": "underline"
+          }
+        },
+        array_property: {
+          name: "Name",
+          value: [1, 2, 3, 4],
+          class: "emphasis"
+        }
+      },
       yours: {
         modules: [],
         project: TEST_PROJECT,
@@ -80,7 +116,7 @@ describe('Semi-Fungible Token', () => {
     expect(balance).toBe(mintAmount)
   }, TIMEOUT_TEST);
 
-  it('NFT has correct metadata', async () => {
+  it('SFT has correct metadata', async () => {
     const keyPair = encryption.makeKeyPair();
     const session = await createAccount(environment.dapp1Client, keyPair);
 
@@ -88,7 +124,25 @@ describe('Semi-Fungible Token', () => {
 
     const tokenMetadata: TokenMetadata = {
       name: `A Test Semi-Fungible Token`,
-      attributes: [{ trait_type: "Background", value: "Blue" }],
+      properties: {
+        simple_property: "example value",
+        rich_property: {
+          name: "Name",
+          value: "123",
+          display_value: "123 Example Value",
+          class: "emphasis",
+          css: {
+            color: "#ffffff",
+            "font-weight": "bold",
+            "text-decoration": "underline"
+          }
+        },
+        array_property: {
+          name: "Name",
+          value: [1, 2, 3, 4],
+          class: "emphasis"
+        }
+      },
       yours: {
         modules: [],
         project: TEST_PROJECT,
@@ -106,8 +160,14 @@ describe('Semi-Fungible Token', () => {
 
     const metadata = await session.query<TokenMetadata>("yours.metadata", { project: TEST_PROJECT, collection, token_id: 0 });
     expect(metadata.name).toBe(tokenMetadata.name);
-    expect(metadata.attributes[0].trait_type).toEqual(tokenMetadata.attributes[0].trait_type);
-    expect(metadata.attributes[0].value).toEqual(tokenMetadata.attributes[0].value);
+    expect(metadata.properties["simple_property"]).toEqual(tokenMetadata.properties.simple_property);
+    expect(metadata.properties["rich_property"]["name"]).toEqual(tokenMetadata.properties.rich_property["name"]);
+    expect(metadata.properties["rich_property"]["value"]).toEqual(tokenMetadata.properties.rich_property["value"]);
+    expect(metadata.properties["rich_property"]["display_value"]).toEqual(tokenMetadata.properties.rich_property["display_value"]);
+    expect(metadata.properties["rich_property"]["class"]).toEqual(tokenMetadata.properties.rich_property["class"]);
+    expect(metadata.properties["rich_property"]["css"]["color"]).toEqual(tokenMetadata.properties.rich_property["css"]["color"]);
+    expect(metadata.properties["rich_property"]["css"]["font-weight"]).toEqual(tokenMetadata.properties.rich_property["css"]["font-weight"]);
+    expect(metadata.properties["rich_property"]["css"]["text-decoration"]).toEqual(tokenMetadata.properties.rich_property["css"]["text-decoration"]);
     expect(metadata.yours.modules).toBeDefined();
     expect(metadata.yours.project).toEqual(tokenMetadata.yours.project);
     expect(metadata.yours.collection).toEqual(tokenMetadata.yours.collection);

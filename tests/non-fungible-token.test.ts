@@ -1,4 +1,4 @@
-import { IClient, encryption } from "postchain-client";
+import { encryption } from "postchain-client";
 import { createAccount } from "./utils/ft4";
 import { getTestEnvironment, teardown, TestEnvironment } from "./utils/setup";
 import { TEST_PROJECT, TIMEOUT_SETUP, TIMEOUT_TEST } from "./utils/constants";
@@ -28,7 +28,25 @@ describe('Non-Fungible Token', () => {
 
     const tokenMetadata: TokenMetadata = {
       name: `Avatar #${tokenId}`,
-      attributes: [{ trait_type: "Background", value: "Blue" }],
+      properties: {
+        simple_property: "example value",
+        rich_property: {
+          name: "Name",
+          value: "123",
+          display_value: "123 Example Value",
+          class: "emphasis",
+          css: {
+            color: "#ffffff",
+            "font-weight": "bold",
+            "text-decoration": "underline"
+          }
+        },
+        array_property: {
+          name: "Name",
+          value: [1, 2, 3, 4],
+          class: "emphasis"
+        }
+      },
       yours: {
         modules: [],
         project: TEST_PROJECT,
@@ -64,7 +82,25 @@ describe('Non-Fungible Token', () => {
 
     const tokenMetadata: TokenMetadata = {
       name: `Avatar #${tokenId}`,
-      attributes: [{ trait_type: "Background", value: "Blue" }],
+      properties: {
+        simple_property: "example value",
+        rich_property: {
+          name: "Name",
+          value: "123",
+          display_value: "123 Example Value",
+          class: "emphasis",
+          css: {
+            color: "#ffffff",
+            "font-weight": "bold",
+            "text-decoration": "underline"
+          }
+        },
+        array_property: {
+          name: "Name",
+          value: [1, 2, 3, 4],
+          class: "emphasis"
+        }
+      },
       yours: {
         modules: [],
         project: TEST_PROJECT,
@@ -75,14 +111,21 @@ describe('Non-Fungible Token', () => {
       animation_url: "Avatar Animation"
     };
 
+    const serializedMetadata = serializeTokenMetadata(tokenMetadata);
+
     await session.transactionBuilder()
-      .add(op("importer.nft", serializeTokenMetadata(tokenMetadata), tokenId))
+      .add(op("importer.nft", serializedMetadata, tokenId))
       .buildAndSend();
 
     const metadata = await session.query<TokenMetadata>("yours.metadata", { project: TEST_PROJECT, collection, token_id: tokenId });
     expect(metadata.name).toBe(tokenMetadata.name);
-    expect(metadata.attributes[0].trait_type).toEqual(tokenMetadata.attributes[0].trait_type);
-    expect(metadata.attributes[0].value).toEqual(tokenMetadata.attributes[0].value);
+    expect(metadata.properties["rich_property"]["name"]).toEqual(tokenMetadata.properties.rich_property["name"]);
+    expect(metadata.properties["rich_property"]["value"]).toEqual(tokenMetadata.properties.rich_property["value"]);
+    expect(metadata.properties["rich_property"]["display_value"]).toEqual(tokenMetadata.properties.rich_property["display_value"]);
+    expect(metadata.properties["rich_property"]["class"]).toEqual(tokenMetadata.properties.rich_property["class"]);
+    expect(metadata.properties["rich_property"]["css"]["color"]).toEqual(tokenMetadata.properties.rich_property["css"]["color"]);
+    expect(metadata.properties["rich_property"]["css"]["font-weight"]).toEqual(tokenMetadata.properties.rich_property["css"]["font-weight"]);
+    expect(metadata.properties["rich_property"]["css"]["text-decoration"]).toEqual(tokenMetadata.properties.rich_property["css"]["text-decoration"]);
     expect(metadata.yours.modules).toBeDefined();
     expect(metadata.yours.project).toEqual(tokenMetadata.yours.project);
     expect(metadata.yours.collection).toEqual(tokenMetadata.yours.collection);

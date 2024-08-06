@@ -20,17 +20,48 @@ operation init_transfer(
   collection: name,
   token_id: integer,
   amount: integer,
-  metadata: gtv
+  metadata: token_metadata_incoming
 ) {
+  log("---------- init_transfer ----------");
   val account = ft4.auth.authenticate();
 
   val token = require(get_token(project, collection, token_id), "Token Not Found");
-  val existing_metadata = get_metadata(token).to_gtv_pretty();
-  require(existing_metadata == metadata, "Invalid Metadata");
+  val existing_metadata = get_metadata(token);
+
+  _validate_metadata(metadata, existing_metadata);
 
   before_init_transfer(token, account);
+
   burn(token, balance_info(account, amount));
+
+  create pending_transfer (
+    sender = account,
+    transaction = op_context.transaction,
+    op_index = op_context.op_index
+  );
+
   after_init_transfer(token, account);
+}
+
+function _validate_metadata(incoming: token_metadata_incoming, outgoing: token_metadata_outgoing) {
+  require(incoming.name == outgoing.name, "Invalid Metadata");
+  require(incoming.description == outgoing.description, "Invalid Metadata");
+  require(incoming.image == outgoing.image, "Invalid Metadata");
+  require(incoming.animation_url == outgoing.animation_url, "Invalid Metadata");
+  _validate_properties(incoming, outgoing);
+}
+
+function _validate_properties(incoming: token_metadata_incoming, outgoing: token_metadata_outgoing) {
+  val incoming_properties = _json_to_gtv_map(incoming.properties);
+  val outgoing_properties = outgoing.properties;
+  for (name in incoming_properties.keys()) {
+    val incoming_value = incoming_properties[name];
+    val outgoing_value = outgoing_properties[name];
+
+    if (incoming_value != outgoing_value) {
+      require(incoming_value == outgoing_value, "Invalid Metadata");
+    }
+  }
 }
 
 /**
@@ -42,6 +73,7 @@ operation apply_transfer(
   init_transfer_tx: gtx_transaction,
   init_tx_op_index: integer
 ) {
+  log("---------- apply_transfer ----------");
   val (init_transfer_details, _) = _validate_apply_transfer(
     init_transfer_tx,
     init_tx_op_index
@@ -55,7 +87,7 @@ operation apply_transfer(
     op_index = op_context.op_index
   );
 
-  val transferred_metadata = token_metadata.from_gtv_pretty(init_transfer_details.args.metadata);
+  val transferred_metadata = init_transfer_details.args.metadata;
   var token = get_token(
     transferred_metadata.yours.project,
     transferred_metadata.yours.collection,
@@ -82,26 +114,68 @@ operation apply_transfer(
   );
 }
 
-function _apply_transfer(account_id: byte_array, token, amount: integer, token_metadata) {
+/**
+ * This operation completes the transfer by deleting the pending transfer from the
+ * applied_transfers table.
+ * 
+ * This operation is for bookkeeping purposes and it is not the end of the world
+ * if it is not executed.
+ * 
+ * The worst case scenario is that the user will believe that they have an additional
+ * transfer to complete, but when they try to complete it, it will fail because
+ * the transfer has already been completed.
+ */
+operation complete_transfer(
+  final_apply_transfer_tx: gtx_transaction,
+  op_index: integer
+) {
+  log("---------- complete_transfer ----------");
+  require(
+    final_apply_transfer_tx.body.operations[op_index].name == rell.meta(apply_transfer).mount_name,
+    "Operation at op_index was not apply_transfer"
+  );
+
+  val final_apply_transfer_args = struct<apply_transfer>
+    .from_gtv(
+      final_apply_transfer_tx
+        .body
+        .operations[op_index]
+        .args
+        .to_gtv()
+    );
+
+  val init_transfer_tx_hash = final_apply_transfer_args.init_transfer_tx.to_gtv().hash();
+
+  iccf.require_valid_proof(
+    final_apply_transfer_tx,
+    require_anchored_proof = true,
+    verify_signers = false
+  );
+
+  delete pending_transfer @ {
+    .transaction
+    .tx_hash == init_transfer_tx_hash,
+    .op_index == final_apply_transfer_args
+    .init_tx_op_index
+  };
+}
+
+function _apply_transfer(account_id: byte_array, token, amount: integer, token_metadata: token_metadata_incoming) {
   mint(token, balance_info(ft4.accounts.account @ { account_id }, amount));
   _apply_common_metadata(token, token_metadata);
 
   val imported_attributes = imported_attributes @? { token };
   if (imported_attributes == null) {
-    create imported_attributes ( token, token_metadata.attributes.to_gtv().to_json() );
+    create imported_attributes ( token, token_metadata.properties );
   } else {
-    imported_attributes.json = token_metadata.attributes.to_gtv().to_json();
+    imported_attributes.json = token_metadata.properties;
   }
 
-  val attributes = map<name, gtv>();
-  for (attribute in token_metadata.attributes) {
-    attributes.put(attribute.trait_type, attribute.value);
-  }
-
-  after_apply_transfer(token, set(token_metadata.yours.modules), attributes);
+  val properties = _json_to_gtv_map(token_metadata.properties);
+  after_apply_transfer(token, set(token_metadata.yours.modules), properties);
 }
 
-function _apply_common_metadata(token, metadata: token_metadata) {
+function _apply_common_metadata(token, metadata: token_metadata_incoming) {
   attach_image(token, metadata.image);
   attach_description(token, metadata.description);
   attach_animation(token, metadata.animation_url);

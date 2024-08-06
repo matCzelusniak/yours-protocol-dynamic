@@ -5,3 +5,7 @@ function ensure_project(name) {
 function ensure_collection(name, project) {
   return collection @? { name } ?: create collection ( name, project );
 }
+
+function _json_to_gtv_map(json): map<text, gtv> {
+  return map<text, gtv>.from_gtv(gtv.from_json(json));
+}

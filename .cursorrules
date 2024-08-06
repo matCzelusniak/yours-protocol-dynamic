@@ -1,82 +1,42 @@
-Syntax Basics for Rell (files with extension '.rell'):
+We are working with Rell, the following liks contains everything you need to know about this proparitary language. Please read it through properly so that you can act as my developer assistant.
 
-1. Code blocks are enclosed in curly braces {}.
-2. Comments use // for single-line and /* */ for multi-line.
-3. Variables are declared using 'val' for immutable and 'var' for mutable.
-4. Types are optionally specified after variable names (e.g., val x: integer = 5).
-
-Key Concepts:
-
-1. Operation:
-  - Is included in a blockchain transaction.
-  - Defined using the 'operation' keyword.
-  - Can modify the blockchain state.
-
-Example:
-```rell
-operation transfer(from: byte_array, to: byte_array, amount: integer) {
-  val from_account = account @ { from };
-  val to_account = account @ { to };
-  from_account.balance -= amount;
-  to_account.balance += amount;
-}
-```
-
-2. Query:
-  - Used to retrieve data from the blockchain.
-  - Defined using the 'query' keyword.
-  - Cannot modify the blockchain state.
-
-Example:
-```rell
-query get_balance(account_id: account) = account @ { account_id } ( .balance );
-```
-
-3. Function:
-  - Reusable piece of code.
-  - Defined using the 'function' keyword.
-  - Can be called from operations, queries, or other functions.
-
-Example:
-```rell
-function calculate_fee(amount: decimal): decimal {
-  return amount * 0.01;
-}
-```
-
-4. Entity:
-  - Represents a database table.
-  - Defined using the 'entity' keyword.
-  - Can have attributes and keys.
-  - Can have indexed attributes, as well as composite indexes.
-  - Can have relations to other entities.
-
-Example:
-```rell
-entity user {
-  key name: text;
-  mutable email: text;
-  mutable age: integer;
-}
-
-entity address {
-  key street: text, zip: text, city: text, country: text;
-}
-
-entity residence {
-  key user, address;
-}
-```
-
-5. Struct:
-  - User-defined data type.
-  - Defined using the 'struct' keyword.
-  - Can contain multiple fields of different types.
-
-Example:
-```rell
-struct point {
-  x: integer;
-  y: integer;
-}
-```
+- https://docs.chromia.com/rell/rell-intro
+- https://docs.chromia.com/rell/core-concepts
+- https://docs.chromia.com/rell/modules
+- https://docs.chromia.com/rell/language-features/types/simple-types
+- https://docs.chromia.com/rell/language-features/types/complex-types
+- https://docs.chromia.com/rell/language-features/types/collection-types
+- https://docs.chromia.com/rell/language-features/types/iterables
+- https://docs.chromia.com/rell/language-features/types/virtual-types
+- https://docs.chromia.com/rell/language-features/types/sub-types
+- https://docs.chromia.com/rell/language-features/modules/entity
+- https://docs.chromia.com/rell/language-features/modules/object
+- https://docs.chromia.com/rell/language-features/modules/struct
+- https://docs.chromia.com/rell/language-features/modules/enum
+- https://docs.chromia.com/rell/language-features/modules/query
+- https://docs.chromia.com/rell/language-features/modules/operation
+- https://docs.chromia.com/rell/language-features/modules/function
+- https://docs.chromia.com/rell/language-features/modules/abstract
+- https://docs.chromia.com/rell/language-features/modules/namespace
+- https://docs.chromia.com/rell/language-features/modules/external
+- https://docs.chromia.com/rell/language-features/modules/mount
+- https://docs.chromia.com/rell/language-features/expressions/overview
+- https://docs.chromia.com/rell/language-features/expressions/operators
+- https://docs.chromia.com/rell/language-features/statements/local-variable
+- https://docs.chromia.com/rell/language-features/statements/basic-statements
+- https://docs.chromia.com/rell/language-features/statements/if-statement
+- https://docs.chromia.com/rell/language-features/statements/when-statement
+- https://docs.chromia.com/rell/language-features/statements/loop-statements
+- https://docs.chromia.com/rell/language-features/database/overview
+- https://docs.chromia.com/rell/language-features/database/create
+- https://docs.chromia.com/rell/language-features/database/update
+- https://docs.chromia.com/rell/language-features/database/delete
+- https://docs.chromia.com/rell/language-features/systemlib/system-entities
+- https://docs.chromia.com/rell/language-features/systemlib/namespaces/chain_context
+- https://docs.chromia.com/rell/language-features/systemlib/namespaces/op_context
+- https://docs.chromia.com/rell/language-features/systemlib/namespaces/crypto
+- https://docs.chromia.com/rell/language-features/systemlib/namespaces/meta
+- https://docs.chromia.com/rell/language-features/systemlib/global-functions
+- https://docs.chromia.com/rell/language-features/systemlib/require-function
+- https://docs.chromia.com/rell/language-features/systemlib/partial-functions
+- https://docs.chromia.com/rell/language-features/systemlib/system-queries
