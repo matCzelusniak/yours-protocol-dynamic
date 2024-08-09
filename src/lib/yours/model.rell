@@ -27,7 +27,6 @@ entity collection {
 entity token {
   key asset: ft_core_assets.asset;
   collection;
-  mutable name;
 }
 
 entity token_balance {
@@ -107,7 +106,7 @@ enum attribute_type {
         text,
         set,
         list,
-        map
+        //map
 }
 
 entity attribute {
@@ -118,6 +117,17 @@ entity attribute {
   type: attribute_type;
 }
 
-function add_attribute_to_token(){
 
+function add_attribute_to_token(
+  token: token, 
+  attribute_name: text, 
+  type: attribute_type, 
+  attribute_value: byte_array)
+{
+  if(type == attribute_type.text){
+
+  } else if(type == attribute_type.integer){
+    
+  }
+  ///...
 }
