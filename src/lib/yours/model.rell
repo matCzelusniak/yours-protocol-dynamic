@@ -25,7 +25,8 @@ entity collection {
  * @param collection The collection that this token belongs to.
  */
 entity token {
-  key collection, id: integer;
+  key asset: ft_core_assets.asset;
+  collection;
   mutable name;
 }
 
@@ -115,4 +116,8 @@ entity attribute {
   value: byte_array;
   key token, name;
   type: attribute_type;
+}
+
+function add_attribute_to_token(){
+
 }

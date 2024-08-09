@@ -5,3 +5,6 @@ namespace ft4 {
   import lib.ft4.accounts;
   import lib.ft4.auth;
 }
+
+
+import ft_core_assets: lib.ft4.core.assets;
