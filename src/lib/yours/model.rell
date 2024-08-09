@@ -95,3 +95,24 @@ entity imported_attributes {
   key token;
   mutable json;
 }
+
+enum attribute_type {
+        boolean,
+        byte_array,
+        decimal,
+        id,
+        instance,
+        integer,
+        text,
+        set,
+        list,
+        map
+}
+
+entity attribute {
+  index token;
+  name: text;
+  value: byte_array;
+  key token, name;
+  type: attribute_type;
+}
