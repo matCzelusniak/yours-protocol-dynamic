@@ -29,10 +29,11 @@ entity token {
   collection;
 }
 
-entity token_balance {
-  key token, ft4.accounts.account;
-  mutable amount: integer;
-}
+// matCzelusniak - use ft4 functionality instead of new entity
+// entity token_balance {
+//   key token, ft4.accounts.account;
+//   mutable amount: integer;
+// }
 
 /**
  * The image for a token. Compatible with ERC721 OpenSea standard.

@@ -51,6 +51,16 @@ function register_asset(
     attribute_value: byte_array
   )>?
 ) {
+  before_register_asset(
+    name,
+    symbol,
+    decimals,
+    blockchain_rid,
+    icon_url,
+    type,
+    attributes
+  );
+
   val asset = ft_assets.Unsafe.register_asset(
     name = name,
     symbol = symbol,
@@ -59,24 +69,26 @@ function register_asset(
     icon_url = icon_url,
     type = type
   );
+
+  after_register_asset(
+    asset,
+    attributes
+  );
 }
 
-
-function mint(
-  project_name: name, 
-  collection_name: name,
+function mint_token(
+  asset_id: byte_array,
   amount: integer,
   accounts: list<ft_accounts.account>?
 ) {
   val accounts_list = get_accounts_to_mint(accounts);
+  val asset = ft_assets.Asset(asset_id);
 
-  // ft_core_assets.Unsafe.mint(
-  //   name = project_name,
-  //   symbol = collection_name,
-  //   decimals = 0,
-  //   issuing_blockchain_rid = ft4.blockchain.current_blockchain_rid(),
-  //   icon_url = "",
-  //   type = "NFT",
-  //   total_supply = 1
-  // );
+  for(account in accounts_list){
+    ft_assets.Unsafe.mint(
+      account,
+      asset,
+      amount
+    );
+  }
 }
