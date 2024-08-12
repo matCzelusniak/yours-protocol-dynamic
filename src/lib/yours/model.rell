@@ -25,7 +25,7 @@ entity collection {
  * @param collection The collection that this token belongs to.
  */
 entity token {
-  key asset: ft_core_assets.asset;
+  key asset: ft_assets.asset;
   collection;
 }
 

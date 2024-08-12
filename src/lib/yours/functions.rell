@@ -1,25 +1,15 @@
-@extendable
-function before_add_attribute_to_token();
-
-@extendable
-function after_add_attribute_to_token();
-
-// entity attribute {
-//   index token;
-//   name: text;
-//   value: byte_array;
-//   key token, name;
-//   type: attribute_type;
-// }
-
-
 function add_attribute_to_token(
   token,
   attribute_name: text,
   type: attribute_type,
   attribute_value: byte_array
-// rell-lint-disable-next-line
 ) {
+  before_add_attribute_to_token(
+    token,
+    attribute_name,
+    type,
+    attribute_value
+  );
 
   when (type){
     attribute_type.boolean,
@@ -39,4 +29,54 @@ function add_attribute_to_token(
       print("Unsupported attribute type");
     }
   }
+
+  after_add_attribute_to_token(
+    token,
+    attribute_name,
+    type,
+    attribute_value
+  );
+}
+
+function register_asset(
+  name,
+  symbol: text,
+  decimals: integer,
+  blockchain_rid: byte_array,
+  icon_url: text,
+  type: text = ft_assets.ASSET_TYPE_FT4,
+  attributes: list<(
+    attribute_name: text,
+    type: attribute_type,
+    attribute_value: byte_array
+  )>?
+) {
+  val asset = ft_assets.Unsafe.register_asset(
+    name = name,
+    symbol = symbol,
+    decimals = 0,
+    blockchain_rid = chain_context.blockchain_rid,
+    icon_url = icon_url,
+    type = type
+  );
+}
+
+
+function mint(
+  project_name: name, 
+  collection_name: name,
+  amount: integer,
+  accounts: list<ft_accounts.account>?
+) {
+  val accounts_list = get_accounts_to_mint(accounts);
+
+  // ft_core_assets.Unsafe.mint(
+  //   name = project_name,
+  //   symbol = collection_name,
+  //   decimals = 0,
+  //   issuing_blockchain_rid = ft4.blockchain.current_blockchain_rid(),
+  //   icon_url = "",
+  //   type = "NFT",
+  //   total_supply = 1
+  // );
 }
