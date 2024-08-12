@@ -1,0 +1,42 @@
+@extendable
+function before_add_attribute_to_token();
+
+@extendable
+function after_add_attribute_to_token();
+
+// entity attribute {
+//   index token;
+//   name: text;
+//   value: byte_array;
+//   key token, name;
+//   type: attribute_type;
+// }
+
+
+function add_attribute_to_token(
+  token,
+  attribute_name: text,
+  type: attribute_type,
+  attribute_value: byte_array
+// rell-lint-disable-next-line
+) {
+
+  when (type){
+    attribute_type.boolean,
+    attribute_type.byte_array,
+    attribute_type.decimal,
+    attribute_type.integer,
+    attribute_type.text
+     -> {
+      create attribute(
+        token,
+        name = attribute_name,
+        value = attribute_value,
+        type = type
+      );
+    }
+    else -> {
+      print("Unsupported attribute type");
+    }
+  }
+}

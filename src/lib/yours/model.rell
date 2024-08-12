@@ -97,16 +97,15 @@ entity imported_attributes {
 }
 
 enum attribute_type {
-        boolean,
-        byte_array,
-        decimal,
-        id,
-        instance,
-        integer,
-        text,
-        set,
-        list,
-        //map
+  boolean,
+  byte_array,
+  decimal,
+  instance,
+  integer,
+  text,
+  // set,
+  // list,
+  //map
 }
 
 entity attribute {
@@ -115,19 +114,4 @@ entity attribute {
   value: byte_array;
   key token, name;
   type: attribute_type;
-}
-
-
-function add_attribute_to_token(
-  token: token, 
-  attribute_name: text, 
-  type: attribute_type, 
-  attribute_value: byte_array)
-{
-  if(type == attribute_type.text){
-
-  } else if(type == attribute_type.integer){
-    
-  }
-  ///...
 }
