@@ -6,7 +6,8 @@ struct pudgy_rod {
 
 query get_rods(): list<pudgy_rod> {
   return yours.attribute @* {
-    .name == "fishing_rod"
+    .token.asset.name == "fishing_rod",
+    .name == "durability"
   } (
     pudgy_rod(
       id = $.token.asset.id,
@@ -15,3 +16,20 @@ query get_rods(): list<pudgy_rod> {
     )
   );
 }
+
+
+// struct pudgy_rod {
+//   id: integer;
+//   name: name;
+//   durability: integer;
+// }
+
+// query get_rods(): list<pudgy_rod> {
+//   return fishing_rod @* {} ( 
+//     pudgy_rod(
+//       id = .token.id, 
+//       name = .token.name, 
+//       durability = .durability
+//     )
+//   );
+// }
