@@ -111,8 +111,8 @@ enum attribute_type {
 
 entity attribute {
   index token;
-  name: text;
-  value: byte_array;
+  index name: text;
+  mutable value: byte_array;
   key token, name;
   type: attribute_type;
 }
