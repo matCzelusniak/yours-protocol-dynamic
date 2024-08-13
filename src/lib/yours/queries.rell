@@ -19,3 +19,25 @@ query balance(account_id: byte_array, project: name, collection: name, token_id:
 
   return get_balance(token, account);
 }
+
+struct attribute_values {
+  id: byte_array;
+  name: name;
+  value: byte_array;
+  type: attribute_type;
+}
+
+// matCzelusniak - research about generic attribute values and types return;
+query get_attribute_for_token_name(token_name: text, attribute_name: text): list<attribute_values> {
+  return attribute @* {
+      .token.asset.name == token_name,
+      .name == attribute_name,
+  } (
+    attribute_values(
+      id = $.token.asset.id,
+      name = $.token.asset.name,
+      value = .value,
+      type = .type
+    )
+  );
+}
