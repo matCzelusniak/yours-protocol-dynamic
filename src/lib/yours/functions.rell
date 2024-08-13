@@ -81,6 +81,11 @@ function mint_token(
   amount: integer,
   accounts: list<ft_accounts.account>?
 ) {
+  before_mint(
+    asset_id,
+    amount,
+    accounts
+  );
   val accounts_list = get_accounts_to_mint(accounts);
   val asset = ft_assets.Asset(asset_id);
 
@@ -91,4 +96,8 @@ function mint_token(
       amount
     );
   }
+  
+  after_mint(
+    asset
+  );
 }

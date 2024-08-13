@@ -1,0 +1,3 @@
+module;
+import yours: ^.*;
+import ft_accounts: lib.ft4.accounts;

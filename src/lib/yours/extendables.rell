@@ -90,8 +90,7 @@ function get_accounts_to_mint(
 // todo matCzelusniak: add description
 @extendable
 function before_mint(
-  project_name: name, 
-  collection_name: name,
+  asset_id: byte_array,
   amount: integer,
   accounts: list<ft_accounts.account>?
 );
@@ -99,5 +98,5 @@ function before_mint(
 // todo matCzelusniak: add description
 @extendable
 function after_mint(
-  token
+  asset: ft_assets.asset,
 );

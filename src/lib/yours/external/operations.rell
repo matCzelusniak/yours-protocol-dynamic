@@ -1,0 +1,7 @@
+operation mint_token(
+  asset_id: byte_array,
+  amount: integer,
+  accounts: list<ft_accounts.account>?
+) {
+  yours.mint_token(asset_id, amount, accounts);
+}
