@@ -24,6 +24,7 @@ entity collection {
  * @param asset The FT4 asset that this token wraps.
  * @param collection The collection that this token belongs to.
  */
+//matCzelusniak asset is
 entity token {
   key asset: ft_assets.asset;
   collection;

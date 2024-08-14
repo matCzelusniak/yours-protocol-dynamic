@@ -17,7 +17,6 @@ query get_rods(): list<pudgy_rod> {
   );
 }
 
-
 // struct pudgy_rod {
 //   id: integer;
 //   name: name;
