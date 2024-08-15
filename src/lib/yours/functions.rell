@@ -50,7 +50,7 @@ function register_asset(
     type: attribute_type,
     attribute_value: byte_array
   )>?
-) {
+) : ft_assets.asset {
   before_register_asset(
     name,
     symbol,
@@ -74,6 +74,8 @@ function register_asset(
     asset,
     attributes
   );
+
+  return asset;
 }
 
 function mint_token(

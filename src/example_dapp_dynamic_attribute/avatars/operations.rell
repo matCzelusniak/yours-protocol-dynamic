@@ -17,7 +17,7 @@ operation register_and_mint_avatar(
 ){
   check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.integer)]));
 
-  yours.register_asset(
+  val asset = yours.register_asset(
     name,
     symbol,
     decimals,
@@ -28,7 +28,7 @@ operation register_and_mint_avatar(
   );
 
   yours.mint_token(
-    blockchain_rid,
+    asset.id,
     amount,
     accounts
   );
