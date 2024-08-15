@@ -1,21 +1,23 @@
-# Yours Protocol
+# Originals Light -
 
-![Integration Tests](https://github.com/megayours/yours-protocol/actions/workflows/integration-tests.yml/badge.svg)
+The Originals Light protocol is a library built on Chromia's relational blockchain that allows the development of decentralized applications without predetermined standards, featuring dynamic attributes and a modular approach.
+
+Dynamic attributes allow the description of real-world assets without the limitations imposed by standards like pure Yours Protocol, ERC-20, ERC-721, or ERC-1155.
 
 Yours Protocol is a groundbreaking token standard built on Chromia's relational blockchain, enabling dynamic on-chain metadata and promoting composability and interoperability.
 
 ## 🌟 Key Features
 
-- **Dynamic On-Chain Metadata**: Evolve token attributes over time, moving beyond static off-chain metadata.
-- **Versatile Token Support**: Accommodate both semi-fungible and non-fungible tokens.
-- **Interoperable Schema**: Standardized schema for cross-blockchain token and metadata transfers.
-- **Performance-Oriented Design**: Optimized data storage for enhanced efficiency and ease-of-use.
+- **Dynamic On-Chain Metadata**: Keep your metadata intact while leveraging generic operations and queries. Minimal code, maximum possibilities
+- **Versatile Token Support**: Accommodate all meaning token types like ERC20, ERC721, ERC1155. Generate your own schema for required metadata.
+- **Interoperable Schema**: Use standardized ft4 lib for cross-chain transfers.
+- **Mulit-Approach**: Uset what you want. Modular approach or existing operations.
 
-## 📚 Documentation
+<!-- ## 📚 Documentation
 
-For comprehensive information about Yours Protocol, please visit our [official documentation](https://docs.megayours.com/yours-protocol).
+For comprehensive information about Yours Protocol, please visit our [official documentation](https://docs.megayours.com/yours-protocol). -->
 
-### 🚀 Getting Started
+<!-- ### 🚀 Getting Started
 
 New to Yours Protocol? Our [Getting Started guide](https://docs.megayours.com/yours-protocol/getting-started) will help you with everything that you need to get going.
 
@@ -54,4 +56,4 @@ After adding these to your `chromia.yml` file, run `chr install` to pull in the 
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! If you're interested in helping improve Yours Protocol, please check out our [Contributing Guide](https://docs.megayours.com/contributing) for more information on how to get started.
+We welcome contributions from the community! If you're interested in helping improve Yours Protocol, please check out our [Contributing Guide](https://docs.megayours.com/contributing) for more information on how to get started. -->
