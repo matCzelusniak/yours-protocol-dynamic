@@ -78,8 +78,8 @@ function register_asset(
 
 function mint_token(
   asset_id: byte_array,
-  amount: integer,
-  accounts: list<ft_accounts.account>?
+  amount: big_integer,
+  accounts: list<byte_array>?
 ) {
   before_mint(
     asset_id,

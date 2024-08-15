@@ -105,6 +105,7 @@ enum attribute_type {
   instance,
   integer,
   text,
+  big_integer
   // set,
   // list,
   //map

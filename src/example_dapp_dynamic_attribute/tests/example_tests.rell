@@ -1,5 +1,43 @@
-@test module;
+function test_mint_avatar() {
+    val account_id = x"01";
+    avatars.register_account(
+        account_id,
+        "test_account"
+    ).run();
 
-function test_print() {
-    print("Hello, world!");
+    avatars.register_and_mint_avatar(
+        "avatar",
+        "AVT",
+        0,
+        chain_context.blockchain_rid,
+        "https://example.com/avatar.png",
+        ft_assets.ASSET_TYPE_FT4,
+        [
+            (
+              attribute_name  = "fishes_caught",
+              type = yours.attribute_type.integer,
+              attribute_value = big_integer(0).to_bytes()
+            )
+        ],
+        [
+            account_id
+        ],
+        1
+    ).run();
 }
+
+// operation register_and_mint_avatar(
+//   name,
+//   symbol: text,
+//   decimals: integer,
+//   blockchain_rid: byte_array,
+//   icon_url: text,
+//   type: text = ft_assets.ASSET_TYPE_FT4,
+//   attributes: list<(
+//     attribute_name: text,
+//     type: yours.attribute_type,
+//     attribute_value: byte_array
+//   )>,
+//   accounts: list<ft_accounts.account>,
+//   amount: integer
+// )

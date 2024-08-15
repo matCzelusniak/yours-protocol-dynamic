@@ -84,15 +84,15 @@ function after_register_asset(
 // todo matCzelusniak: add description
 @extendable
 function get_accounts_to_mint(
-  accounts: list<ft_accounts.account>?
+  accounts: list<byte_array>?
 ) : list<ft_accounts.account>;
 
 // todo matCzelusniak: add description
 @extendable
 function before_mint(
   asset_id: byte_array,
-  amount: integer,
-  accounts: list<ft_accounts.account>?
+  amount: big_integer,
+  accounts: list<byte_array>?
 );
 
 // todo matCzelusniak: add description

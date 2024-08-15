@@ -1,0 +1,5 @@
+@test module;
+import ^.avatars;
+import ft_accounts_ext: lib.ft4.external.accounts;
+import lib.yours;
+import ft_assets: lib.ft4.assets;

@@ -12,8 +12,8 @@ operation register_and_mint_avatar(
     type: yours.attribute_type,
     attribute_value: byte_array
   )>,
-  accounts: list<ft_accounts.account>,
-  amount: integer
+  accounts: list<byte_array>,
+  amount: big_integer
 ){
   check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.integer)]));
 
@@ -31,5 +31,17 @@ operation register_and_mint_avatar(
     blockchain_rid,
     amount,
     accounts
+  );
+}
+
+// simple registration without auth descriptors for test purposes
+// todo matCzelusniak - add support for registration with ft4 functions.
+operation register_account (
+  account_id: byte_array,
+  name: text
+) {
+  create ft_accounts.account(
+    id = account_id, 
+    name
   );
 }
