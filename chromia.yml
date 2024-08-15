@@ -12,10 +12,23 @@ blockchains:
       lib.ft4.core.accounts:
         rate_limit:
           active: false
+  example_dapp_dynamic_attribute:
+    module: example_dapp_dynamic_attribute
+    moduleArgs:
+      lib.ft4.core.accounts:
+        rate_limit:
+          active: false
+    test:
+      modules:
+        - example_dapp_dynamic_attribute.tests
+      moduleArgs:
+        lib.ft4.core.accounts:
+          rate_limit:
+            active: false
 
-test:
-  modules:
-    - tests
+# test:
+#   modules:
+#     - example_dapp_dynamic_attribute.tests
 
 libs:
   ft4:
@@ -32,8 +45,17 @@ libs:
     insecure: false
 
 compile:
-  rellVersion: 0.13.5
+  rellVersion: 0.20.8
+
+# database:
+#   schema: yours
+#   host: postgres
 
 database:
+  password: postchain
+  username: postchain
+  database: postchain
+  host: localhost
+  logSqlErrors: true
   schema: yours
-  host: postgres
+  driver: org.postgresql.Driver

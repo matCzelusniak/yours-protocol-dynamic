@@ -1,0 +1,5 @@
+@test module;
+
+function test_print() {
+    print("Hello, world!");
+}
