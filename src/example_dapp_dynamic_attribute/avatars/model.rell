@@ -15,6 +15,6 @@
 //   key fishing_rod;
 // }
 entity equipped_fishing_rod {
-  key avatar_token: yours.token;
-  key fishing_rod_token: yours.token;
+  key avatar: yours.token;
+  key fishing_rod: yours.token;
 }

@@ -45,3 +45,22 @@ operation register_account (
     name
   );
 }
+
+operation equip_fishing_rod(avatar_id: integer, fishing_rod_id: integer) {
+  avatars.equip_fishing_rod(
+    avatar_id,
+    fishing_rod_id
+  );
+}
+
+operation unequip_fishing_rod(avatar_id: integer) {
+  avatars.unequip_fishing_rod(
+    avatar_id
+  );
+}
+
+operation pull_fish(avatar_id: integer) {
+  avatars.pull_fish(
+    avatar_id
+  );
+}

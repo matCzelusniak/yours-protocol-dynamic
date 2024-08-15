@@ -24,7 +24,8 @@ entity collection {
  * @param asset The FT4 asset that this token wraps.
  * @param collection The collection that this token belongs to.
  */
-//matCzelusniak asset is
+//matCzelusniak consider to delete totally collection from token and create other entity for relation token<->collection
+// thanks to that we can have multiple collections for one token and not use collection in token
 entity token {
   key asset: ft_assets.asset;
   collection;
