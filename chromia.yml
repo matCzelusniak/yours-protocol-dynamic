@@ -47,10 +47,6 @@ libs:
 compile:
   rellVersion: 0.20.8
 
-# database:
-#   schema: yours
-#   host: postgres
-
 database:
   password: postchain
   username: postchain

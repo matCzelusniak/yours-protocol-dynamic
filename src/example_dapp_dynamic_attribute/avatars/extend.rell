@@ -1,0 +1,27 @@
+
+// // one of the options for checking attributes and can be decided by user of lib
+// @extend(yours.before_register_asset)
+// function (
+//   name,
+//   symbol: text,
+//   decimals: integer,
+//   blockchain_rid: byte_array,
+//   icon_url: text,
+//   type: text = ft_assets.ASSET_TYPE_FT4,
+//   attributes: list<(
+//     attribute_name: text,
+//     type: yours.attribute_type,
+//     attribute_value: byte_array
+//   )>?
+// ) {
+//   if(name == "avatar"){
+//     //check here if required attributes are present
+//     require(attributes  != null, "Attribute fishes_caught is required for asset avatar");
+//     for(attribute in attributes!!){
+//       if(attribute.attribute_name == "fishes_caught"){
+//         return;
+//       }
+//     }
+//     require(false, "Attribute fishes_caught is required for asset avatar");
+//   }
+// }
