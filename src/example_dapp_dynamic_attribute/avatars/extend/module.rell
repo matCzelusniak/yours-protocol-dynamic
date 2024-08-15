@@ -1,0 +1,3 @@
+module;
+import lib.yours;
+import ft_assets: lib.ft4.assets;

@@ -21,6 +21,7 @@ blockchains:
     test:
       modules:
         - example_dapp_dynamic_attribute.tests
+        # - example_dapp_dynamic_attribute.tests_with_extend
       moduleArgs:
         lib.ft4.core.accounts:
           rate_limit:

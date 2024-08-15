@@ -2,4 +2,6 @@
 import avatars_ext: ^.avatars.external;
 import ft_accounts_ext: lib.ft4.external.accounts;
 import lib.yours;
+import yours_external: lib.yours.external;
 import ft_assets: lib.ft4.assets;
+import avatars_external_extend: ^.avatars.external_extend_example;

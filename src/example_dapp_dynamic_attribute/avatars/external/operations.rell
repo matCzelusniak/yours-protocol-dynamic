@@ -15,7 +15,7 @@ operation register_and_mint_avatar(
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.integer)]));
+  yours.check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.integer)]));
 
   val asset = yours.register_asset(
     name,
