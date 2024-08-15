@@ -14,7 +14,7 @@ function (
     attribute_value: byte_array
   )>?
 ) {
-  print("jajo before_register_asset");
+  print("xyz before_register_asset");
   require(
     attributes != null,
     "Attributes are required"

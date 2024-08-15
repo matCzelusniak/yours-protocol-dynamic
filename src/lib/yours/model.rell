@@ -28,7 +28,7 @@ entity collection {
 // thanks to that we can have multiple collections for one token and not use collection in token
 entity token {
   key asset: ft_assets.asset;
-  collection;
+  // collection;
 }
 
 // matCzelusniak - use ft4 functionality instead of new entity

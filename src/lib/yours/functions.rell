@@ -70,6 +70,10 @@ function register_asset(
     type = type
   );
 
+  create token(
+    asset,
+  );
+
   after_register_asset(
     asset,
     attributes
@@ -98,7 +102,7 @@ function mint_token(
       amount
     );
   }
-  
+
   after_mint(
     asset
   );

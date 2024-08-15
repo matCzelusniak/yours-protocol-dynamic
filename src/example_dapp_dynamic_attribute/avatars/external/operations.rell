@@ -15,7 +15,42 @@ operation register_and_mint_avatar(
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  yours.check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.integer)]));
+  yours.check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.big_integer)]));
+
+  val asset = yours.register_asset(
+    name,
+    symbol,
+    decimals,
+    blockchain_rid,
+    icon_url,
+    type,
+    attributes
+  );
+
+  yours.mint_token(
+    asset.id,
+    amount,
+    accounts
+  );
+}
+
+// one of the options for checking attributes and can be decided by user of lib
+operation register_and_mint_fishing_rod(
+  name,
+  symbol: text,
+  decimals: integer,
+  blockchain_rid: byte_array,
+  icon_url: text,
+  type: text = ft_assets.ASSET_TYPE_FT4,
+  attributes: list<(
+    attribute_name: text,
+    type: yours.attribute_type,
+    attribute_value: byte_array
+  )>,
+  accounts: list<byte_array>,
+  amount: big_integer
+){
+  yours.check_required_attributes(attributes, list([("durability", yours.attribute_type.big_integer)]));
 
   val asset = yours.register_asset(
     name,
@@ -46,20 +81,20 @@ operation register_account (
   );
 }
 
-operation equip_fishing_rod(avatar_id: integer, fishing_rod_id: integer) {
+operation equip_fishing_rod(avatar_id: byte_array, fishing_rod_id: byte_array) {
   avatars.equip_fishing_rod(
     avatar_id,
     fishing_rod_id
   );
 }
 
-operation unequip_fishing_rod(avatar_id: integer) {
+operation unequip_fishing_rod(avatar_id: byte_array) {
   avatars.unequip_fishing_rod(
     avatar_id
   );
 }
 
-operation pull_fish(avatar_id: integer) {
+operation pull_fish(avatar_id: byte_array) {
   avatars.pull_fish(
     avatar_id
   );
