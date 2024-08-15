@@ -4,14 +4,17 @@ The Originals Light protocol is a library built on Chromia's relational blockcha
 
 Dynamic attributes allow the description of real-world assets without the limitations imposed by standards like pure Yours Protocol, ERC-20, ERC-721, or ERC-1155.
 
-Yours Protocol is a groundbreaking token standard built on Chromia's relational blockchain, enabling dynamic on-chain metadata and promoting composability and interoperability.
-
 ## 🌟 Key Features
 
 - **Dynamic On-Chain Metadata**: Keep your metadata intact while leveraging generic operations and queries. Minimal code, maximum possibilities
 - **Versatile Token Support**: Accommodate all meaning token types like ERC20, ERC721, ERC1155. Generate your own schema for required metadata.
 - **Interoperable Schema**: Use standardized ft4 lib for cross-chain transfers.
 - **Mulit-Approach**: Uset what you want. Modular approach or existing operations.
+
+## 🌟 Example
+
+Application example_dapp_dynamic_attribute
+Run by command 'chr test' in main directory.
 
 <!-- ## 📚 Documentation
 
