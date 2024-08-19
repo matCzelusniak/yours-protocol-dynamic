@@ -16,6 +16,10 @@ Dynamic attributes allow the description of real-world assets without the limita
 Application example_dapp_dynamic_attribute
 Run by command 'chr test' in main directory.
 
+## 🌟 Features proposal
+
+- **Dynamic Atributes as optional module**: is possible to add entity attrbutes as additional module and not require it in regsiter/mint time.
+
 <!-- ## 📚 Documentation
 
 For comprehensive information about Yours Protocol, please visit our [official documentation](https://docs.megayours.com/yours-protocol). -->
