@@ -15,7 +15,10 @@ operation register_and_mint_avatar(
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  originals_light.check_required_attributes(attributes, list([("fishes_caught", originals_light.attribute_type.big_integer)]));
+  originals_light.check_required_attributes(
+    attributes, 
+    list([(attribute_name ="fishes_caught", type = originals_light.attribute_type.big_integer)])
+  );
 
   val asset = originals_light.register_asset(
     name,
@@ -24,8 +27,7 @@ operation register_and_mint_avatar(
     blockchain_rid,
     icon_url,
     type,
-    attributes,
-    null
+    attributes
   );
 
   originals_light.mint_asset(
@@ -51,7 +53,10 @@ operation register_and_mint_fishing_rod(
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  originals_light.check_required_attributes(attributes, list([("durability", originals_light.attribute_type.big_integer)]));
+  originals_light.check_required_attributes(
+    attributes, 
+    list([(attribute_name = "durability", type = originals_light.attribute_type.big_integer)])
+  );
 
   val asset = originals_light.register_asset(
     name,
@@ -60,8 +65,7 @@ operation register_and_mint_fishing_rod(
     blockchain_rid,
     icon_url,
     type,
-    attributes,
-    null
+    attributes
   );
 
   originals_light.mint_asset(

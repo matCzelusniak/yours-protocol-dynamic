@@ -12,16 +12,29 @@ blockchains:
       lib.ft4.core.accounts:
         rate_limit:
           active: false
-  example_dapp_dynamic_attribute:
-    module: example_dapp_dynamic_attribute
+  # example_dapp_dynamic_attribute:
+  #   module: example_dapp_dynamic_attribute
+  #   moduleArgs:
+  #     lib.ft4.core.accounts:
+  #       rate_limit:
+  #         active: false
+  #   test:
+  #     modules:
+  #       - example_dapp_dynamic_attribute.tests
+  #     moduleArgs:
+  #       lib.ft4.core.accounts:
+  #         rate_limit:
+  #           active: false
+
+  example_dapp_assets_erc_721_standarized:
+    module: example_dapp_assets_erc_721_standarized
     moduleArgs:
       lib.ft4.core.accounts:
         rate_limit:
           active: false
     test:
       modules:
-        - example_dapp_dynamic_attribute.tests
-        # - example_dapp_dynamic_attribute.tests_with_extend
+        - example_dapp_assets_erc_721_standarized.tests
       moduleArgs:
         lib.ft4.core.accounts:
           rate_limit:

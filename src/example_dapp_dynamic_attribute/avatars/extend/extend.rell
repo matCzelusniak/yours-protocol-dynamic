@@ -12,25 +12,24 @@ function (
     attribute_name: text,
     type: originals_light.attribute_type,
     attribute_value: byte_array
-  )>?,
-  interfaces: list<byte_array>?,
+  )>?
 ) {
   print("xyz before_register_asset");
   require(
     attributes != null,
     "Attributes are required"
   );
-
+  // list<(attribute_name: text, type: attribute_type)
   if(name == "avatar"){
     originals_light.check_required_attributes(
-      attributes!!, 
-      list([("fishes_caught", originals_light.attribute_type.integer)])
+      attributes!!,
+      list([(attribute_name = "fishes_caught", type = originals_light.attribute_type.big_integer)])
     );
   }
   else if(name == "fishing_rod"){
     originals_light.check_required_attributes(
       attributes!!, 
-      list([("durability", originals_light.attribute_type.big_integer)])
+      list([(attribute_name = "durability", type = originals_light.attribute_type.big_integer)])
     );
   }
 }
