@@ -1,7 +1,7 @@
 struct pudgy_rod {
   id: byte_array;
   name: name;
-  durability: integer;
+  durability: big_integer;
 }
 
 query get_rods(): list<pudgy_rod> {
@@ -12,7 +12,7 @@ query get_rods(): list<pudgy_rod> {
     pudgy_rod(
       id = $.token.asset.id,
       name = $.token.asset.name,
-      durability = integer.from_hex($.value.to_hex())
+      durability = big_integer.from_bytes($.value)
     )
   );
 }
