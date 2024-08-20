@@ -44,6 +44,11 @@ libs:
     tagOrBranch: 1.32.2
     rid: x"1D567580C717B91D2F188A4D786DB1D41501086B155A68303661D25364314A4D"
     insecure: false
+  pagination:
+    registry: git@bitbucket.org:chromawallet/lib-pagination-utils.git
+    path: rell/src/core/pagination
+    tagOrBranch: master
+    insecure: true
 
 compile:
   rellVersion: 0.20.8

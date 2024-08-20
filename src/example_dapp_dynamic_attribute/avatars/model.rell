@@ -1,20 +1,4 @@
-//keep as attribute
-// entity avatar {
-//   key yours.token;
-//   mutable fishes_caught: integer;
-// }
-
-// keep as attribute
-// entity fishing_rod {
-//   key yours.token;
-//   mutable durability: integer;
-// }
-
-// entity equipped_fishing_rod {
-//   key avatar;
-//   key fishing_rod;
-// }
 entity equipped_fishing_rod {
-  key avatar: yours.token;
-  key fishing_rod: yours.token;
+  key avatar: ft_assets.asset;
+  key fishing_rod: ft_assets.asset;
 }

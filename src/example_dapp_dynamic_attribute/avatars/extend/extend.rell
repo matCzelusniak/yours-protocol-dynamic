@@ -1,6 +1,6 @@
 
 // // one of the options for strict checking attributes and can be decided by user of lib
-@extend(yours.before_register_asset)
+@extend(originals_light.before_register_asset)
 function (
   name,
   symbol: text,
@@ -10,9 +10,10 @@ function (
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: yours.attribute_type,
+    type: originals_light.attribute_type,
     attribute_value: byte_array
-  )>?
+  )>?,
+  interfaces: list<byte_array>?,
 ) {
   print("xyz before_register_asset");
   require(
@@ -21,15 +22,15 @@ function (
   );
 
   if(name == "avatar"){
-    yours.check_required_attributes(
+    originals_light.check_required_attributes(
       attributes!!, 
-      list([("fishes_caught", yours.attribute_type.integer)])
+      list([("fishes_caught", originals_light.attribute_type.integer)])
     );
   }
   else if(name == "fishing_rod"){
-    yours.check_required_attributes(
+    originals_light.check_required_attributes(
       attributes!!, 
-      list([("durability", yours.attribute_type.big_integer)])
+      list([("durability", originals_light.attribute_type.big_integer)])
     );
   }
 }

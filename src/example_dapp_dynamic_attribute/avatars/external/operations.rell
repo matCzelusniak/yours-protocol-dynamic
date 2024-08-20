@@ -9,25 +9,26 @@ operation register_and_mint_avatar(
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: yours.attribute_type,
+    type: originals_light.attribute_type,
     attribute_value: byte_array
   )>,
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  yours.check_required_attributes(attributes, list([("fishes_caught", yours.attribute_type.big_integer)]));
+  originals_light.check_required_attributes(attributes, list([("fishes_caught", originals_light.attribute_type.big_integer)]));
 
-  val asset = yours.register_asset(
+  val asset = originals_light.register_asset(
     name,
     symbol,
     decimals,
     blockchain_rid,
     icon_url,
     type,
-    attributes
+    attributes,
+    null
   );
 
-  yours.mint_token(
+  originals_light.mint_asset(
     asset.id,
     amount,
     accounts
@@ -44,25 +45,26 @@ operation register_and_mint_fishing_rod(
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: yours.attribute_type,
+    type: originals_light.attribute_type,
     attribute_value: byte_array
   )>,
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  yours.check_required_attributes(attributes, list([("durability", yours.attribute_type.big_integer)]));
+  originals_light.check_required_attributes(attributes, list([("durability", originals_light.attribute_type.big_integer)]));
 
-  val asset = yours.register_asset(
+  val asset = originals_light.register_asset(
     name,
     symbol,
     decimals,
     blockchain_rid,
     icon_url,
     type,
-    attributes
+    attributes,
+    null
   );
 
-  yours.mint_token(
+  originals_light.mint_asset(
     asset.id,
     amount,
     accounts

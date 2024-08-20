@@ -6,7 +6,7 @@ function test_mint_avatar_with_standard_operation() {
         "test_account"
     ).run();
 
-    yours_external.register_and_mint_token(
+    originals_light_external.register_and_mint_asset(
         "avatar",
         "AVT",
         0,
@@ -16,10 +16,11 @@ function test_mint_avatar_with_standard_operation() {
         [
             (
               attribute_name  = "fishes_caught",
-              type = yours.attribute_type.integer,
+              type = originals_light.attribute_type.integer,
               attribute_value = big_integer(0).to_bytes()
             )
         ],
+        null,
         [
             account_id
         ],

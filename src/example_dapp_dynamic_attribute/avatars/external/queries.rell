@@ -5,30 +5,14 @@ struct pudgy_rod {
 }
 
 query get_rods(): list<pudgy_rod> {
-  return yours.attribute @* {
-    .token.asset.name == "fishing_rod",
+  return originals_light.attribute @* {
+    .asset.name == "fishing_rod",
     .name == "durability"
   } (
     pudgy_rod(
-      id = $.token.asset.id,
-      name = $.token.asset.name,
+      id = $.asset.id,
+      name = $.asset.name,
       durability = big_integer.from_bytes($.value)
     )
   );
 }
-
-// struct pudgy_rod {
-//   id: integer;
-//   name: name;
-//   durability: integer;
-// }
-
-// query get_rods(): list<pudgy_rod> {
-//   return fishing_rod @* {} ( 
-//     pudgy_rod(
-//       id = .token.id, 
-//       name = .token.name, 
-//       durability = .durability
-//     )
-//   );
-// }
