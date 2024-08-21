@@ -21,11 +21,3 @@ operation register_account (
     name
   );
 }
-
-// operation import_erc721(){
-//   originals_ligt.register_asset(
-//     "ERC721",
-//     "ERC721",
-//     0,
-//     byte_array.from_hex("0x
-// }

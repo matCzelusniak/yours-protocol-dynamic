@@ -7,14 +7,36 @@ Dynamic attributes allow the description of real-world assets without the limita
 ## 🌟 Key Features
 
 - **Dynamic On-Chain Metadata**: Keep your metadata intact while leveraging generic operations and queries. Minimal code, maximum possibilities
-- **Versatile Token Support**: Accommodate all meaning token types like ERC20, ERC721, ERC1155. Generate your own schema for required metadata.
+- **Dynamic On-Chain Metadata**: Predefined algorithms for metadata. User predefined algorithms like rarity calculation with dynamic attributes.
+- **Versatile Token Support**: Accommodate all meaning token types like ERC20, ERC721, ERC1155 as interface with specified metadata. Generate your own schema/interface for required metadata.
 - **Interoperable Schema**: Use standardized ft4 lib for cross-chain transfers.
 - **Mulit-Approach**: Uset what you want. Modular approach or existing operations.
+- **No extra wrappers**: No wrappers for ft4 assets, transfers etc. Keep performance good as ft4 is.
+- **Compability**: FT4 library under the hood. Easier cross chain (standardized) communication.
+- **Keep as you want**: Keep your metadata in your own entities with your queries and operations if you want.
 
 ## 🌟 Example
 
 Application example_dapp_dynamic_attribute
 Run by command 'chr test' in main directory.
+
+- Feature dynamic attributes enabled
+- Dynamic attributes without obligatory interface
+- Possibility of checking required attributes for specific asset in dedicated operation/function or with extension
+- Comparison to the example dapp yours-protocol-dynamic/src/example_dapp2/avatars.
+- Less entities in compare to the yours-protocol-dynamic/src/example_dapp2/avatars
+- Usage generic functions for dynamic attributes.
+
+Application example_dapp_assets_erc_721_standarized
+Run by command 'chr test' in main directory.
+
+- Example shows importer dapp with standarized metadata schema for asset
+- Feature dynamic attributes enabled
+- Dynamic attributes without obligatory interface
+- Possibility of checking required attributes for specific asset in dedicated operation/function or with extension
+- Comparison to the example dapp yours-protocol-dynamic/src/example_dapp2/avatars.
+- Less entities in compare to the yours-protocol-dynamic/src/example_dapp2/avatars
+- Usage of generic functions for dynamic attributes.
 
 ## 🌟 Features proposal
 
