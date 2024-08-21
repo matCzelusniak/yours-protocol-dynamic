@@ -1,0 +1,3 @@
+function _json_to_gtv_map(json): map<text, gtv> {
+  return map<text, gtv>.from_gtv(gtv.from_json(json));
+}
