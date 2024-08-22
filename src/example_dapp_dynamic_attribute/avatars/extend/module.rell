@@ -1,3 +1,4 @@
 module;
-import lib.originals_light;
+import originals_light_attributes: lib.originals_light.attributes;
+import originals_light_assets: lib.originals_light.assets;
 import ft_assets: lib.ft4.assets;

@@ -5,7 +5,7 @@ struct pudgy_rod {
 }
 
 query get_rods(): list<pudgy_rod> {
-  return originals_light.attribute @* {
+  return originals_light_attributes.attribute @* {
     .asset.name == "fishing_rod",
     .name == "durability"
   } (
