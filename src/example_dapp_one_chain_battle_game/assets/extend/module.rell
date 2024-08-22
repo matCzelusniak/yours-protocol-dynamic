@@ -1,0 +1,5 @@
+module;
+import lib.originals_light;
+import ft_assets: lib.ft4.assets;
+import ft_admin: lib.ft4.core.admin;
+import ^^.assets;

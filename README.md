@@ -15,6 +15,10 @@ Dynamic attributes allow the description of real-world assets without the limita
 - **Compability**: FT4 library under the hood. Easier cross chain (standardized) communication.
 - **Keep as you want**: Keep your metadata in your own entities with your queries and operations if you want.
 
+## Description
+
+Interface is just 'declaration' of type and when you create asset with specific type (type/interface is optionl) you create definition
+
 ## 🌟 Example
 
 Application example_dapp_dynamic_attribute

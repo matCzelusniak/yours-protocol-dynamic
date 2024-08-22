@@ -101,3 +101,21 @@ function before_mint(
 function after_mint(
   asset: ft_assets.asset,
 );
+
+@extendable
+function before_register_interface(
+  name: text,
+  attributes: list<(
+    attribute_name: text,
+    type: attribute_type
+  )>
+);
+
+@extendable
+function after_register_interface(
+  name: text,
+  attributes: list<(
+    attribute_name: text,
+    type: attribute_type
+  )>
+);
