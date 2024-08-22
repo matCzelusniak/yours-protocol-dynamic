@@ -51,7 +51,11 @@ function update_attribute(
     attribute_value
   );
 
-  val asset = ft_assets.Asset(asset_id);
+  update attribute @ { .name == attribute_name, .asset.id == asset_id } ( value = attribute_value );
 
-  after_update_attribute(asset, attribute);
+  after_update_attribute(
+    asset_id,
+    attribute_name,
+    attribute_value
+  );
 }

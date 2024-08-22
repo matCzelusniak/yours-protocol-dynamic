@@ -4,7 +4,7 @@ operation set_current_version_of_erc721_interface(
   id: big_integer
 ) {
   require(
-    originals_light.interface @? {.id == id}, 
+    originals_light_interfaces.interface @? {.id == id}, 
     "Interface with given id does not exist."
   );
   importer.config.erc721_current_version = id;
