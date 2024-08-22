@@ -1,0 +1,45 @@
+operation add_attribute_to_asset(
+  asset_id: byte_array,
+  attribute_name: text,
+  type: attributes.attribute_type,
+  attribute_value: byte_array
+){
+  attributes.add_attribute_to_asset(
+    asset_id,
+    attribute_name,
+    type,
+    attribute_value
+  );
+}
+
+operation register_interface(
+  name: text,
+  interface_attributes: list<(
+    attribute_name: text,
+    type: attributes.attribute_type
+  )>
+){
+  attributes.register_interface(
+    name,
+    interface_attributes
+  );
+}
+
+// function register_interface(
+//   name: text,
+//   attributes: list<(
+//     attribute_name: text,
+//     type: attribute_type
+//   )>
+// ) 
+
+operation update_attribute(
+  asset_id: byte_array,
+  attribute_name: text,
+  attribute_value: byte_array
+) {
+  val asset = ft_assets.get_asset(asset_id);
+  ft_assets.require_asset_owner(asset);
+  val attribute = ft_assets.get_attribute(asset, attribute_name);
+  ft_assets.update_attribute(attribute, attribute_value);
+}

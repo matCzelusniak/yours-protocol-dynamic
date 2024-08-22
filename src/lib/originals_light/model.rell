@@ -85,39 +85,3 @@ entity asset_module {
 //   mutable json;
 // }
 
-enum attribute_type {
-  boolean,
-  byte_array,
-  decimal,
-  instance,
-  integer,
-  text,
-  big_integer
-  // set,
-  // list,
-  //map
-}
-
-entity attribute {
-  index asset: ft_assets.asset;
-  index name: text;
-  mutable value: byte_array;
-  key asset, name;
-  type: attribute_type;
-}
-
-//todo matCzelusniak: type for asset, but not obligatory
-entity interface{
-  key id: big_integer;
-  index name: text;
-}
-
-entity interface_attributes {
-  index interface: interface;
-  attribute_name: text;
-  type: attribute_type;
-}
-
-entity asset_interfaces {
-  key asset: ft_assets.asset, interface: interface;
-}

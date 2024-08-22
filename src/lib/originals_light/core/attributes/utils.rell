@@ -19,15 +19,3 @@ function check_required_attributes(
     "Not all required attributes are present"
   );
 }
-
-function require_interface_compatibility(
-  attributes: list<(
-    attribute_name: text,
-    type: attribute_type,
-    attribute_value: byte_array
-  )>,
-  interface: interface
-) {
-  val interface_attributes = interface_attributes @* {.interface == interface} (.attribute_name, .type);
-  check_required_attributes(attributes, interface_attributes);
-}
