@@ -9,18 +9,18 @@ operation register_and_mint_avatar(
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: originals_light.attribute_type,
+    type: originals_light_attributes.attribute_type,
     attribute_value: byte_array
   )>,
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  originals_light.check_required_attributes(
+  originals_light_attributes.check_required_attributes(
     attributes, 
-    list([(attribute_name ="fishes_caught", type = originals_light.attribute_type.big_integer)])
+    list([(attribute_name ="fishes_caught", type = originals_light_attributes.attribute_type.big_integer)])
   );
 
-  val asset = originals_light.register_asset(
+  val asset = originals_light_assets.register_asset(
     name,
     symbol,
     decimals,
@@ -30,7 +30,7 @@ operation register_and_mint_avatar(
     attributes
   );
 
-  originals_light.mint_asset(
+  originals_light_assets.mint_asset(
     asset.id,
     amount,
     accounts
@@ -47,18 +47,18 @@ operation register_and_mint_fishing_rod(
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: originals_light.attribute_type,
+    type: originals_light_attributes.attribute_type,
     attribute_value: byte_array
   )>,
   accounts: list<byte_array>,
   amount: big_integer
 ){
-  originals_light.check_required_attributes(
+  originals_light_attributes.check_required_attributes(
     attributes, 
-    list([(attribute_name = "durability", type = originals_light.attribute_type.big_integer)])
+    list([(attribute_name = "durability", type = originals_light_attributes.attribute_type.big_integer)])
   );
 
-  val asset = originals_light.register_asset(
+  val asset = originals_light_assets.register_asset(
     name,
     symbol,
     decimals,
@@ -68,7 +68,7 @@ operation register_and_mint_fishing_rod(
     attributes
   );
 
-  originals_light.mint_asset(
+  originals_light_assets.mint_asset(
     asset.id,
     amount,
     accounts

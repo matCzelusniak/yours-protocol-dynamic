@@ -2,3 +2,5 @@ entity equipped_fishing_rod {
   key avatar: ft_assets.asset;
   key fishing_rod: ft_assets.asset;
 }
+
+// propose linking

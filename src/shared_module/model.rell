@@ -1,4 +1,0 @@
-entity times_bridged {
-  key yours.token;
-  mutable amount: integer;
-}
