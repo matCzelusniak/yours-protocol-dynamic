@@ -1,5 +1,5 @@
 
-@extend(originals_light.before_register_asset)
+@extend(originals_light_assets.before_register_asset)
 function (
   name,
   symbol: text,
@@ -9,23 +9,21 @@ function (
   type: text = ft_assets.ASSET_TYPE_FT4,
   attributes: list<(
     attribute_name: text,
-    type: originals_light.attribute_type,
+    type: originals_light_attributes.attribute_type,
     attribute_value: byte_array
   )>?
 ) {
-  //In this dapp only authenticated account can c
-  // originals_light.require_interface_compatibility(
-  //   attributes!!,
-  //   originals_light.interface @ { .id == importer.config.erc721_current_version }
-  // );
+  //In this dapp only authenticated account can create new asset
+  // add support for auth later
+  //ft_auth.authenticate();
 }
 
-@extend(originals_light.before_register_interface)
+@extend(originals_light_interfaces.before_register_interface)
 function (
   name: text,
   attributes: list<(
     attribute_name: text,
-    type: originals_light.attribute_type
+    type: originals_light_attributes.attribute_type
   )>
 ) {
   // example of centralized app. Only admin of the app can define new interface/type of asset

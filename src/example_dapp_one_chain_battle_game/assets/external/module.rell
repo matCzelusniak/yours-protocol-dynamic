@@ -1,9 +1,0 @@
-module;
-import lib.originals_light;
-import originals_light_external: lib.originals_light.external;
-import ^.extend;
-import ^^.assets;
-import ft_accounts: lib.ft4.accounts;
-import ft_admin: lib.ft4.core.admin;
-import ft_assets: lib.ft4.assets;
-import ft_auth: lib.ft4.auth;

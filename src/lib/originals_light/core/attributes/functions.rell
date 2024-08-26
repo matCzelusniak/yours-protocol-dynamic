@@ -18,6 +18,7 @@ function add_attribute_to_asset(
     attribute_type.byte_array,
     attribute_type.decimal,
     attribute_type.integer,
+    attribute_type.big_integer,
     attribute_type.text
      -> {
       create attribute(
@@ -50,7 +51,6 @@ function update_attribute(
     attribute_name,
     attribute_value
   );
-
   update attribute @ { .name == attribute_name, .asset.id == asset_id } ( value = attribute_value );
 
   after_update_attribute(
